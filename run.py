@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
 import os
+import launcher.finder
 
 path = os.path.dirname(os.path.realpath(__file__))
+modules = os.path.realpath(path + "/platform")
 
-os.system("docker build -t raiden " + path + "/nginx")
-os.system("docker run --name raiden -ti -p 80:80")
+launcher.finder.load(modules)
