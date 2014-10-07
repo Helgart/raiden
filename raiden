@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+import os
+import argparse
+import launcher.finder
+
+## Starting raiden launcher
+parser = argparse.ArgumentParser()
+parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
+parser.add_argument("--platform", help="Define the platform folder path")
+parser.add_argument("--applications", help="Define the application folder path")
+arguments = parser.parse_args()
+
+## setting path variables
+raiden_path = os.path.dirname(os.path.realpath(__file__))
+platform_path = arguments.platform if arguments.platform else raiden_path + "/platform"
+applications_path = arguments.applications if arguments.applications else raiden_path + "/applications"
+
+## Raiden launcher initialisation 
+#launcher.finder.load(platform_path)
+
+## Launching containers
