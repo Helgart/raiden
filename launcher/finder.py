@@ -47,7 +47,7 @@ def runContainer(container_name, image_name):
         return False
     if not containerExists(container_name):
         print "Launching " + container_name + " using image " + image_name
-        subprocess.call(['docker', 'run', '-ti', '-p', '80:80', '--name', container_name, image_name], stdout=DEVNULL, stderr=DEVNULL)
+        subprocess.call(['docker', 'run', '-tid', '-p', '80:80', '--name', container_name, image_name], stdout=DEVNULL, stderr=DEVNULL)
         return True
     print "Starting container " + container_name
     subprocess.call(['docker', 'start', container_name], stdout=DEVNULL, stderr=DEVNULL)
