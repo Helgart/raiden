@@ -1,0 +1,8 @@
+name: nginx
+order: 1
+options:
+    detached: true
+    interactive: true
+    tty: true
+    expose:
+        - "80:80"
