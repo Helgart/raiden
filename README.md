@@ -22,3 +22,21 @@ Raiden is made to help you manage a server using a docker base architecture.
 For Raiden to work you need the following package to be installed with **docker** and **python 2.7** (not tested on anterior versions for now) :
 
 * python-yaml
+
+## Configuration files ##
+
+### Configuration file exemple ###
+
+
+```
+#!yaml
+
+name: nginx
+order: 1
+options:
+    detached: true
+    interactive: true
+    tty: true
+    expose:
+        - "80:80"
+```
