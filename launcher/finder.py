@@ -1,11 +1,78 @@
 import os
 import subprocess
 
-######################
-## Run all dockers container in project folder
-## 
-## Just a POC for now, if ok will be separate in separate files
-######################
+class Finder:
+    """ Run all dockers container in project folder """
+
+    def __init__(self, root):
+        ## Raiden root path
+        self.__root = root
+
+        ## Platform modules root path
+        self.__platform_path = self.root + "/platform"
+
+        ## Applications path
+        self.__applications_path = self.root + "/applications"
+
+        ## All founded platform modules
+        ## These are Module object
+        self.__platform_modules = []
+
+        ## All founded applications
+        ## These are Application object 
+        self.__applications = []
+
+    def search(self):
+        ## Searching for plateform modules
+        for module in os.listdir(self.platform_path):
+            print "Checking " + self.platform_path + "/" + module + "/Dockerfile"
+        
+        ## Searching for application
+        for application in os.listdir(self.applications_path):
+            print "Checking " + self.applications_path + "/" + application + "/Dockerfile"
+
+            ## To be replaced by an Image object
+            #builtImage(modules + "/" + module, "raiden-" + module + "-image")
+
+            ## To be replaced by a Container object
+            #runContainer("raiden-" + module, "raiden-" + module + "-image")
+
+    ##
+    ## Getters and setters definition
+    ##
+
+    @property
+    def root(self):
+        return self.__root
+
+    @property
+    def platform_path(self):
+        return self.__platform_path
+
+    @property
+    def applications_path(self):
+        return self.__applications_path
+
+    @property
+    def platform_modules(self):
+        return self.__platform_modules
+
+    @property
+    def applications(self):
+        return self.__applications
+
+
+
+
+
+
+
+
+
+
+#####
+## Just for reference
+#####
 
 def imageIsBuilt(image_name):
     DEVNULL = open(os.devnull, 'wb')
@@ -52,9 +119,3 @@ def runContainer(container_name, image_name):
     print "Starting container " + container_name
     subprocess.call(['docker', 'start', container_name], stdout=DEVNULL, stderr=DEVNULL)
     return True
-
-def load(modules):
-    for module in os.listdir(modules):
-        print "Checking " + modules + "/" + module + "/Dockerfile"
-        builtImage(modules + "/" + module, "raiden-" + module + "-image")
-        runContainer("raiden-" + module, "raiden-" + module + "-image")

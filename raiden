@@ -2,7 +2,7 @@
 
 import os
 import argparse
-import launcher.finder
+from launcher.finder import Finder
 
 ## Starting raiden launcher
 parser = argparse.ArgumentParser()
@@ -11,12 +11,22 @@ parser.add_argument("--platform", help="Define the platform folder path")
 parser.add_argument("--applications", help="Define the application folder path")
 arguments = parser.parse_args()
 
-## setting path variables
+## setting the raiden root path
+## And initializing finder with it
 raiden_path = os.path.dirname(os.path.realpath(__file__))
-platform_path = arguments.platform if arguments.platform else raiden_path + "/platform"
-applications_path = arguments.applications if arguments.applications else raiden_path + "/applications"
+finder = Finder(raiden_path)
 
-## Raiden launcher initialisation 
-#launcher.finder.load(platform_path)
+## @next -> adding setters
+## Checking if user want to override some paths
+# if arguments.platform_path:
+# 	finder.platform_path = arguments.platform_path
+# if arguments.applications_path:
+# 	finder.applications_path = arguments.applications_path
 
-## Launching containers
+finder.search()
+
+## Launch docker collections
+## - First the platform
+## - And then applications
+##
+## And before each launching we must check if image is built
