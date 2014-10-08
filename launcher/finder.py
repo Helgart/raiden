@@ -1,5 +1,7 @@
 import os
 import subprocess
+from container.platform import Platform
+from container.application import Application
 
 class Finder:
     """ Run all dockers container in project folder """
@@ -27,14 +29,22 @@ class Finder:
 
         ## Searching for plateform modules
         for module in os.listdir(self.platform_path):
-            print "Checking " + self.platform_path + "/" + module + "/Dockerfile"
+            print "Checking " + self.platform_path + "/" + module
+            container = Platform()
+            self.__platform_modules.append(container)
+
+        return self.platform_modules
 
     def searchApplications(self):
         """ Search for all applications docker containers in defined paths """
 
         ## Searching for application
         for application in os.listdir(self.applications_path):
-            print "Checking " + self.applications_path + "/" + application + "/Dockerfile"
+            print "Checking " + self.applications_path + "/" + application
+            container = Application()
+            self.__applications.append(container)
+
+        return self.applications
 
     def search(self):
         """ Search for all docker containers in defined paths """
@@ -78,14 +88,6 @@ class Finder:
     @applications_path.setter
     def applications_path(self, value):
         self.__applications_path = value
-
-    @platform_modules.setter
-    def platform_modules(self, value):
-        self.__platform_modules = value
-
-    @applications.setter
-    def applications(self, value):
-        self.__applications = value
 
 
 

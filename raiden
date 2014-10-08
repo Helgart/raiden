@@ -22,7 +22,7 @@ if arguments.platform:
 if arguments.applications:
 	finder.applications_path = arguments.applications
 
-finder.search()
+platform, applications = finder.search()
 
 ## Launch docker collections
 ## - First the platform
