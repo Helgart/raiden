@@ -30,7 +30,10 @@ class Finder:
         ## Searching for plateform modules
         for module in os.listdir(self.platform_path):
             print "Checking " + self.platform_path + "/" + module
-            container = Platform()
+            if os.path.isfile(self.platform_path + "/" + module + "/config.yml"):
+                container = Platform(self.platform_path + "/" + module + "/config.yml")
+            else:
+                container = Platform()
             self.__platform_modules.append(container)
 
         return self.platform_modules
@@ -41,7 +44,10 @@ class Finder:
         ## Searching for application
         for application in os.listdir(self.applications_path):
             print "Checking " + self.applications_path + "/" + application
-            container = Application()
+            if os.path.isfile(self.applications_path + "/" + application + "/config.yml"):
+                container = Application(self.applications_path + "/" + application + "/config.yml")
+            else:
+                container = Application()
             self.__applications.append(container)
 
         return self.applications
@@ -50,12 +56,6 @@ class Finder:
         """ Search for all docker containers in defined paths """
 
         return self.searchPlatforms(), self.searchApplications()
-
-        ## To be replaced by an Image object
-        #builtImage(modules + "/" + module, "raiden-" + module + "-image")
-
-        ## To be replaced by a Container object
-        #runContainer("raiden-" + module, "raiden-" + module + "-image")
 
     ##
     ## Getters and setters definition
