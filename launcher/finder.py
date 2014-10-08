@@ -22,20 +22,30 @@ class Finder:
         ## These are Application object 
         self.__applications = []
 
-    def search(self):
+    def searchPlatforms(self):
+        """ Search for all platform docker containers in defined paths """
+
         ## Searching for plateform modules
         for module in os.listdir(self.platform_path):
             print "Checking " + self.platform_path + "/" + module + "/Dockerfile"
-        
+
+    def searchApplications(self):
+        """ Search for all applications docker containers in defined paths """
+
         ## Searching for application
         for application in os.listdir(self.applications_path):
             print "Checking " + self.applications_path + "/" + application + "/Dockerfile"
 
-            ## To be replaced by an Image object
-            #builtImage(modules + "/" + module, "raiden-" + module + "-image")
+    def search(self):
+        """ Search for all docker containers in defined paths """
 
-            ## To be replaced by a Container object
-            #runContainer("raiden-" + module, "raiden-" + module + "-image")
+        return self.searchPlatforms(), self.searchApplications()
+
+        ## To be replaced by an Image object
+        #builtImage(modules + "/" + module, "raiden-" + module + "-image")
+
+        ## To be replaced by a Container object
+        #runContainer("raiden-" + module, "raiden-" + module + "-image")
 
     ##
     ## Getters and setters definition
@@ -60,6 +70,22 @@ class Finder:
     @property
     def applications(self):
         return self.__applications
+
+    @platform_path.setter
+    def platform_path(self, value):
+        self.__platform_path = value
+
+    @applications_path.setter
+    def applications_path(self, value):
+        self.__applications_path = value
+
+    @platform_modules.setter
+    def platform_modules(self, value):
+        self.__platform_modules = value
+
+    @applications.setter
+    def applications(self, value):
+        self.__applications = value
 
 
 

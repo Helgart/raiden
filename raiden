@@ -16,12 +16,11 @@ arguments = parser.parse_args()
 raiden_path = os.path.dirname(os.path.realpath(__file__))
 finder = Finder(raiden_path)
 
-## @next -> adding setters
 ## Checking if user want to override some paths
-# if arguments.platform_path:
-# 	finder.platform_path = arguments.platform_path
-# if arguments.applications_path:
-# 	finder.applications_path = arguments.applications_path
+if arguments.platform:
+	finder.platform_path = arguments.platform
+if arguments.applications:
+	finder.applications_path = arguments.applications
 
 finder.search()
 
