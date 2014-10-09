@@ -3,6 +3,7 @@
 import os
 import argparse
 from launcher.finder import Finder
+from launcher.runner import Runner
 
 ## Starting raiden launcher
 parser = argparse.ArgumentParser()
@@ -29,3 +30,7 @@ platform, applications = finder.search()
 ## - And then applications
 ##
 ## And before each launching we must check if image is built
+
+runner = Runner()
+runner.run(platform)
+runner.run(applications)
