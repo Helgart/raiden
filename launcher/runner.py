@@ -10,7 +10,6 @@ class Runner:
 			## We try to execute requested action
 			try:
 				action_method = getattr(container, action)
-				break
 			except AttributeError:
 				print "Unknown action " + action + " for container " + container.name
 				return False

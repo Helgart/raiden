@@ -3,6 +3,8 @@ import subprocess
 import yaml
 import json
 
+## @todo: mainly missing some log
+## @todo: no additional parameters for now, to add
 class BaseContainer:
 	""" Base container, herited by all container types """
 
@@ -30,20 +32,6 @@ class BaseContainer:
 		self.__name = configuration['name']
 		self.__order = configuration['order']
 		self.__options = configuration['options']
-
-	def refresh(self):
-		""" Refresh container status """
-
-		self.__inspect = None
-		DEVNULL = open(os.devnull, 'wb')
-		try:
-			self.__inspect = json.loads(subprocess.check_output(['docker', 'inspect', self.__internal_name], stderr=DEVNULL))[0]
-		except subprocess.CalledProcessError as e:
-			if e.returncode == 1:
-				pass
-			else:
-				raise e
-		DEVNULL.close()
 
 	# Well ... need some work here
 	# A command runner class would be cool !
@@ -73,14 +61,25 @@ class BaseContainer:
 
 	# same here need some work :)
 	def run(self):
-		""" Run a container using defined options """
+		""" Run a container using defined options. Build image if needed. """
 
-		print "running container " + self.__internal_name
+		status = self.status()
+		if status == self.RUNNING:
+			print "container " + self.__internal_name + " already running"
 
-		return False
+		if status == self.UNDEFINED:
+			self.build()
+		
 		DEVNULL = open(os.devnull, 'wb')
-		subprocess.call(['docker', 'run', '-tid', '-p', '80:80', '--name', self.__internal_name, self.__internal_image_name], stdout=DEVNULL, stderr=DEVNULL)
+		if status == self.STOPPED:
+			print "resuming container " + self.__internal_name
+			subprocess.call(['docker', 'start', self.__internal_name], stdout=DEVNULL, stderr=DEVNULL)
+		else:
+			print "running container " + self.__internal_name
+			subprocess.call(['docker', 'run', '-tid', '-p', '80:80', '--name', self.__internal_name, self.__internal_image_name], stdout=DEVNULL, stderr=DEVNULL)
 		DEVNULL.close()
+
+		return True
 
 	##
 	## Getters and Setters definition
