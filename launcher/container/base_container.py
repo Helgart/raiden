@@ -34,7 +34,6 @@ class BaseContainer:
 		self.__options = configuration['options']
 
 	# Well ... need some work here
-	# A command runner class would be cool !
 	# But really need something basic for now
 	def status(self):
 		""" Get container running status """
@@ -44,7 +43,8 @@ class BaseContainer:
 		if not subprocess.call(['grep', self.__internal_name], stdin=docker_containers.stdout, stdout=DEVNULL, stderr=DEVNULL):
 			DEVNULL.close()
 			return self.RUNNING
-		if not subprocess.call(['grep', self.__internal_name, '-a'], stdin=docker_containers.stdout, stdout=DEVNULL, stderr=DEVNULL):
+		docker_containers = subprocess.Popen(['docker', 'ps', '-a'], stdout=subprocess.PIPE)
+		if not subprocess.call(['grep', self.__internal_name], stdin=docker_containers.stdout, stdout=DEVNULL, stderr=DEVNULL):
 			DEVNULL.close()
 			return self.STOPPED
 		DEVNULL.close()
