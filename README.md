@@ -33,6 +33,7 @@ For Raiden to work you need the following package to be installed with **docker*
 
 name: nginx
 order: 1
+type: platform
 options:
     detached: true
     interactive: true
