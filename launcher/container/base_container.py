@@ -76,6 +76,8 @@ class BaseContainer:
 		""" Run a container using defined options """
 
 		print "running container " + self.__internal_name
+
+		return False
 		DEVNULL = open(os.devnull, 'wb')
 		subprocess.call(['docker', 'run', '-tid', '-p', '80:80', '--name', self.__internal_name, self.__internal_image_name], stdout=DEVNULL, stderr=DEVNULL)
 		DEVNULL.close()

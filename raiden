@@ -37,7 +37,7 @@ if arguments.applications:
 ## And before each launching we must check if image is built
 
 runner = Runner()
-runner.run(platform)
+runner.run(platform, arguments.action)
 
 if not applications == None:
-	runner.run(applications)
+	runner.run(applications, arguments.action)
