@@ -1,4 +1,5 @@
 name: nginx
+type: platform
 order: 1
 options:
     detached: true

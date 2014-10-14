@@ -11,7 +11,7 @@ class BaseContainer:
 	RUNNING = 1
 	STOPPED = 2
 
-	def __init__(self, path, configuration_file = None):
+	def __init__(self, path, configuration = None):
 		""" load default attributes """
 
 		self.__name = ''
@@ -20,13 +20,6 @@ class BaseContainer:
 		self.__inspect = None
 		self.__path = path
 
-		## In next version values will be generated and saved in a file
-		## But for now we must have a configuration file with at least a name
-		if configuration_file is None:
-			print configuration_file
-			raise Exception("Configuration file is mandatory")
-		stream = open(configuration_file, 'r')
-		configuration = yaml.load(stream)
 		self.init(configuration)
 		self.__internal_name = "raiden-" + self.name
 		self.__internal_image_name = "raiden-" + self.name + "-image"
@@ -53,6 +46,7 @@ class BaseContainer:
 		DEVNULL.close()
 
 	# Well ... need some work here
+	# A command runner class would be cool !
 	# But really need something basic for now
 	def status(self):
 		""" Get container running status """

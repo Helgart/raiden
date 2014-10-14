@@ -15,15 +15,20 @@ arguments = parser.parse_args()
 ## setting the raiden root path
 ## And initializing finder with it
 raiden_path = os.path.dirname(os.path.realpath(__file__))
-finder = Finder(raiden_path)
+finder = Finder()
+
+platform = None
+applications = None
 
 ## Checking if user want to override some paths
 if arguments.platform:
-	finder.platform_path = arguments.platform
-if arguments.applications:
-	finder.applications_path = arguments.applications
+	platform = finder.search(arguments.platform)
+else:
+	platform = finder.search(raiden_path + "/platform")
 
-platform, applications = finder.search()
+## Loading applications is not mandatory
+if arguments.applications:
+	applications = finder.search()
 
 ## Launch docker collections
 ## - First the platform
@@ -33,4 +38,6 @@ platform, applications = finder.search()
 
 runner = Runner()
 runner.run(platform)
-runner.run(applications)
+
+if not applications == None:
+	runner.run(applications)
