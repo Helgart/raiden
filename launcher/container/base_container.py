@@ -1,11 +1,6 @@
-import os
-import subprocess
-import yaml
-import json
-
 ## @todo: mainly missing some log
 ## @todo: no additional parameters for now, to add
-class BaseContainer:
+class BaseContainer(object):
 	""" Base container, herited by all container types """
 
 	def __init__(self, path, configuration = None):
