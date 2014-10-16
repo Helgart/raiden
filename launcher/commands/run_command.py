@@ -54,25 +54,28 @@ class RunCommand(BaseCommand):
 			Since we don't have any triggers yet in Raiden, we do the logic here. Won't stay here for too long.
 		"""
 
+		## Already running ? Nothing to do then ...
 		if container.status == container.STATUS_RUNNING:
 			print "Container " + container.internal_name + " already running"
 			return self.RETURN_WONT_DO
 
+		## Container's image is not build, so we build it
 		if container.status == container.STATUS_UNKNOWN:
-			print "Image " + container.internal_image_name + " need to be build, won't do for now"
-			return self.RETURN_WONT_DO
+			print "Building image " + container.internal_image_name
+			DEVNULL = open(os.devnull, 'wb')
+			subprocess.call(['docker', 'build', '-t', container.internal_image_name, container.path], stdout=DEVNULL, stderr=DEVNULL)
+			DEVNULL.close()
 
+		## Container is stopped, just need to resume it
 		if container.status == container.STATUS_STOPPED:
 			print "Resuming container " + container.internal_name
 			self.main_command = "docker start"
 			self.params = [container.internal_name]
-		elif container.status == container.STATUS_BUILD:
-			print "Running container " + container.internal_name
-			self.params += ["--name", container.internal_name, container.internal_image_name]
-		else:
-			print "Unknown status"
-			return self.RETURN_WONT_DO
+			return self.RETURN_SUCCESS
 		
+		## Default behavior, we run container from configuration file
+		print "Running container " + container.internal_name
+		self.params += ["--name", container.internal_name, container.internal_image_name]
 		return_code = super(RunCommand, self).execute(container)
 
 		if return_code != 0:

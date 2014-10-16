@@ -52,10 +52,8 @@ class BaseCommand(object):
 		if self.main_command == None:
 			raise Exception("No command defined")
 
-		print self.main_command.split(' ') + self.params
-
 		DEVNULL = open(os.devnull, 'wb')
-		#return_code = subprocess.call(self.main_command.split(' ') + self.params, stdout=DEVNULL, stderr=DEVNULL)
+		return_code = subprocess.call(self.main_command.split(' ') + self.params, stdout=DEVNULL, stderr=DEVNULL)
 		DEVNULL.close()
 
 		return 0

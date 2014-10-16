@@ -1,9 +1,0 @@
-name: nginx
-type: platform
-order: 1
-options:
-    detached: true
-    interactive: true
-    tty: true
-    expose:
-        - "8080:80"

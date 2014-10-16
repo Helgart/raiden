@@ -51,9 +51,11 @@ class BaseContainer(object):
 		## Will contain container or image inspection
 		inspect = None
 
-		## We need to get container state
 		print "Inspecting container"
 		DEVNULL = open(os.devnull, 'wb')
+
+		## We need to get container state
+		## If non 0 return status, container doesn't exists
 		try:
 			inspect = subprocess.check_output(['docker', 'inspect', self.internal_name], stderr=DEVNULL)
 			container_exists = True
@@ -61,14 +63,21 @@ class BaseContainer(object):
 		except subprocess.CalledProcessError:
 			container_exists = False
 			pass
-		DEVNULL.close()
 
-		## for now, no image check
+		## No container, so we need to check if we need to build his image or not
 		if not container_exists:
-			self.__status = self.STATUS_UNKNOWN
-			return
+			try:
+				subprocess.check_call(['docker', 'inspect', self.internal_image_name], stdout=DEVNULL, stderr=DEVNULL)
+				self.__status = self.STATUS_BUILD
+			except subprocess.CalledProcessError:
+				self.__status = self.STATUS_UNKNOWN
+				pass
 
-		self.__status = self.STATUS_RUNNING if inspect[0]['State']['Running'] else self.STATUS_STOPPED
+		## We have a container, is it running ? or just stopped ?
+		else:
+			self.__status = self.STATUS_RUNNING if inspect[0]['State']['Running'] else self.STATUS_STOPPED
+
+		DEVNULL.close()
 
 	##
 	## Getters and Setters definition
