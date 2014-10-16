@@ -70,20 +70,14 @@ class RunCommand(BaseCommand):
 		if container.status == container.STATUS_STOPPED:
 			print "Resuming container " + container.internal_name
 			self.main_command = "docker start"
-			self.addParam([container.internal_name])
-			return self.RETURN_SUCCESS
+			self.params.append(container.internal_name)
+			return super(RunCommand, self).execute(container)
 		
 		## Default behavior, we run container from configuration file
 		print "Running container " + container.internal_name
 		
 		## Adding params
-		command.addParams(container.options)
-		
+		self.addParams(container.options)
 		self.params += ["--name", container.internal_name, container.internal_image_name]
-		return_code = super(RunCommand, self).execute(container)
 
-		if return_code != 0:
-			print "Failed to run " + container.internal_name
-			return return_code
-
-		return self.RETURN_SUCCESS
+		return super(RunCommand, self).execute(container)

@@ -6,6 +6,7 @@ from launcher.finder import Finder
 from launcher.runner import Runner
 
 ## Starting raiden launcher
+## Defining application arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
 parser.add_argument("--platform", help="Define the platform folder path")
@@ -13,10 +14,9 @@ parser.add_argument("--applications", help="Define the application folder path")
 arguments = parser.parse_args()
 
 ## setting the raiden root path
-## And initializing finder with it
 raiden_path = os.path.dirname(os.path.realpath(__file__))
-finder = Finder()
 
+finder = Finder()
 platform = None
 applications = None
 
@@ -33,8 +33,6 @@ if arguments.applications:
 ## Launch docker collections
 ## - First the platform
 ## - And then applications
-##
-## And before each launching we must check if image is built
 
 if not platform:
 	print "No images found for platform"
@@ -45,3 +43,5 @@ runner.run(platform, arguments.action)
 
 if not applications == None:
 	runner.run(applications, arguments.action)
+
+print "Done !"
