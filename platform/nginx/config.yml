@@ -6,4 +6,4 @@ options:
     interactive: true
     tty: true
     expose:
-        - "80:80"
+        - "8080:80"

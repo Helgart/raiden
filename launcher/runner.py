@@ -21,7 +21,8 @@ class Runner:
 				## Executing command
 				command.execute(container)
 
-			except AttributeError:
+			except AttributeError as e:
+				print e
 				print "Unkown command " + action + " for container " + container.name
 				return False
 

@@ -1,13 +1,18 @@
 import subprocess
+import os
 
 class BaseCommand(object):
 	""" Build a docker command from command type and configuration """
+
+	RETURN_SUCCESS = 0
+	RETURN_WONT_DO = -1
 
 	def __init__(self):
 
 		self.params = []
 		self.main_command = None
 		self.filters = []
+		self.trigger = []
 
 	def filter(self, param):
 		""" Filter a param, take a param tupple and return the new one """
@@ -47,10 +52,10 @@ class BaseCommand(object):
 		if self.main_command == None:
 			raise Exception("No command defined")
 
-		print "Executing " + self.main_command
+		print self.main_command.split(' ') + self.params
 
-		# DEVNULL = open(os.devnull, 'wb')
-		# subprocess.call(self.main_command.split(' ') + self.params stdout=DEVNULL, stderr=DEVNULL)
-		# DEVNULL.close()
+		DEVNULL = open(os.devnull, 'wb')
+		#return_code = subprocess.call(self.main_command.split(' ') + self.params, stdout=DEVNULL, stderr=DEVNULL)
+		DEVNULL.close()
 
-		return True
+		return 0
