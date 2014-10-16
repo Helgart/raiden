@@ -36,6 +36,10 @@ if arguments.applications:
 ##
 ## And before each launching we must check if image is built
 
+if not platform:
+	print "No images found for platform"
+	exit(1)
+
 runner = Runner()
 runner.run(platform, arguments.action)
 

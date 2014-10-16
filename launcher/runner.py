@@ -15,14 +15,10 @@ class Runner:
 				command_class = getattr(command_module, action.title() + "Command")
 				command = command_class()
 
-				## Adding params
-				command.addParams(container.options)
-
 				## Executing command
 				command.execute(container)
 
 			except AttributeError as e:
-				print e
 				print "Unkown command " + action + " for container " + container.name
 				return False
 
