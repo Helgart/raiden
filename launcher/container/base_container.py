@@ -55,16 +55,20 @@ class BaseContainer(object):
 		print "Inspecting container"
 		DEVNULL = open(os.devnull, 'wb')
 		try:
-			inspect = subprocess.check_output(['docker', 'inspect', 'plop'], stderr=DEVNULL)
+			inspect = subprocess.check_output(['docker', 'inspect', self.internal_name], stderr=DEVNULL)
 			container_exists = True
+			inspect = json.loads(inspect)
 		except subprocess.CalledProcessError:
 			container_exists = False
 			pass
 		DEVNULL.close()
 
-		print inspect
+		## for now, no image check
+		if not container_exists:
+			self.__status = self.STATUS_UNKNOWN
+			return
 
-		self.__status = self.STATUS_UNKNOWN
+		self.__status = self.STATUS_RUNNING if inspect[0]['State']['Running'] else self.STATUS_STOPPED
 
 	##
 	## Getters and Setters definition
