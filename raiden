@@ -2,6 +2,7 @@
 
 import os
 import argparse
+from launcher.utilities.printer import Printer
 from launcher.finder import Finder
 from launcher.runner import Runner
 
@@ -19,6 +20,7 @@ raiden_path = os.path.dirname(os.path.realpath(__file__))
 finder = Finder()
 platform = None
 applications = None
+printer = Printer()
 
 ## Checking if user want to override some paths
 if arguments.platform:
@@ -35,7 +37,7 @@ if arguments.applications:
 ## - And then applications
 
 if not platform:
-	print "No images found for platform"
+	printer.info("No images found for platform")
 	exit(1)
 
 runner = Runner()
@@ -44,4 +46,4 @@ runner.run(platform, arguments.action)
 if not applications == None:
 	runner.run(applications, arguments.action)
 
-print "Done !"
+printer.info("Done !")
