@@ -3,11 +3,10 @@ from stop_command import StopCommand
 from run_command import RunCommand
 
 class RestartCommand(BaseCommand):
-	""" Stop containers """
+	""" restart container """
 
 	def __init__(self):
 		super(RestartCommand, self).__init__()
-		self.main_command = "docker stop"
 
 	def execute(self, container):
 		"""
