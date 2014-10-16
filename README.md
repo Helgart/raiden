@@ -7,7 +7,7 @@
 usage: raiden [-h] [--platform PLATFORM] [--applications APPLICATIONS] action
 
 positional arguments:
-  action                Define launcher action, can be start, stop, restart, delete
+  action                Define launcher action, can be start, stop, restart, clean
 
 optional arguments:
   -h, --help                                   show this help message and exit
