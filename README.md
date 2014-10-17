@@ -4,15 +4,16 @@
 ```
 #!bash
 
-usage: raiden [-h] [--platform PLATFORM] [--applications APPLICATIONS] action
+usage: raiden [-h] [-v V] [--platform PLATFORM] [--applications APPLICATIONS] action
 
 positional arguments:
-  action                Define launcher action, can be start, stop, restart, clean
+  action                Define launcher action, can be start, stop, restart, delete
 
 optional arguments:
-  -h, --help                                   show this help message and exit
-  --platform PLATFORM              Define the platform folder path
-  --applications APPLICATIONS Define the application folder path
+  -h, --help                                          show this help message and exit
+  -v V                                                  Define log level from 0 (debug) to 3 (error only), default 1 (info)
+  --platform PLATFORM                     Define the platform folder path
+  --applications APPLICATIONS        Define the application folder path
 ```
 
 ## What is Raiden ##
