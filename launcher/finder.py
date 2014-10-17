@@ -4,21 +4,21 @@ from utilities.printer import Printer
 from image_loader import ImageLoader
 
 class Finder:
-    """ Run all dockers container in project folder """
+	""" Run all dockers container in project folder """
 
-    def search(self, path):
-        """ Search for all platform docker containers in defined paths """
+	def search(self, path):
+		""" Search for all platform docker containers in defined paths """
 
-        printer = Printer()
-        images = []
-        loader = ImageLoader()
+		printer = Printer()
+		images = []
+		loader = ImageLoader()
 
-        ## Searching for plateform modules
-        for image in os.listdir(path):
-            if os.path.isdir(path + "/" + image):
-                printer.debug("Checking " + path + "/" + image)
-                if os.path.isfile(path + "/" + image + "/config.yml"):
-                    container = loader.load(path + "/" + image)
-                images.append(container)
+		## Searching for plateform modules
+		for image in os.listdir(path):
+			if os.path.isdir(path + "/" + image):
+				printer.debug("Checking " + path + "/" + image)
+				if os.path.isfile(path + "/" + image + "/config.yml"):
+					container = loader.load(path + "/" + image)
+				images.append(container)
 
-        return images
+		return images

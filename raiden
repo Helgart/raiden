@@ -20,7 +20,10 @@ raiden_path = os.path.dirname(os.path.realpath(__file__))
 finder = Finder()
 platform = None
 applications = None
+
+## Setting global printer
 printer = Printer()
+printer.level = printer.DEBUG
 
 ## Checking if user want to override some paths
 if arguments.platform:
