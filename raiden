@@ -10,6 +10,7 @@ from launcher.runner import Runner
 ## Defining application arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
+parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
 parser.add_argument("--platform", help="Define the platform folder path")
 parser.add_argument("--applications", help="Define the application folder path")
 arguments = parser.parse_args()
@@ -23,7 +24,8 @@ applications = None
 
 ## Setting global printer
 printer = Printer()
-printer.level = printer.DEBUG
+if arguments.v != None:
+	printer.level = arguments.v
 
 ## Checking if user want to override some paths
 if arguments.platform:
@@ -39,6 +41,9 @@ if arguments.applications:
 ## - First the platform
 ## - And then applications
 
+## Platform is, somehow, mandatory
+## Consider that you can't run an application without platform
+## If you only have applications, well, this is your platform
 if not platform:
 	printer.info("No images found for platform")
 	exit(1)
