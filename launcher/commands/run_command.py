@@ -13,7 +13,7 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["detached", "interactive", "tty", "expose"]
+		self.filters = ["detached", "interactive", "tty", "expose", "volatile"]
 
 		self.__printer = Printer()
 
@@ -45,6 +45,13 @@ class RunCommand(BaseCommand):
 
 		if param:
 			return "-i"
+		return None
+
+	def filter_volatile(self, param):
+		""" filter --rm param for docker run """
+
+		if param:
+			return "--rm"
 		return None
 
 	def execute(self, container):
