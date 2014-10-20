@@ -1,6 +1,8 @@
 import subprocess
 import os
 
+from launcher.utilities.printer import Printer
+
 class BaseCommand(object):
 	""" Build a docker command from command type and configuration """
 
@@ -14,15 +16,18 @@ class BaseCommand(object):
 		self.filters = []
 		self.trigger = []
 
+		self.__printer = Printer()
+
 	def filter(self, param):
 		""" Filter a param, take a param tupple and return the new one """
 
 		if param[0] in self.filters:
 			try:
 				filter_method = getattr(self, "filter_" + param[0])
+				self.__printer.debug("Command", "Executing filter " + param[0])
 				return filter_method(param)
 			except AttributeError:
-				print "Filter filter_" + param[0] + " not implemented passing"
+				self.__printer.warning("Command", "Filter " + param[0] + " not implemented passing")
 				pass
 
 			return param
@@ -31,6 +36,7 @@ class BaseCommand(object):
 		""" Add a parameter to command line from tupple """
 
 		filtered = self.filter(param)
+		self.__printer.debug("Command", "Adding parameter : " + str(filtered))
 		if filtered != None and isinstance(filtered, list):
 			self.params.extend(filtered)
 		elif filtered != None:
@@ -52,6 +58,7 @@ class BaseCommand(object):
 		if self.main_command == None:
 			raise Exception("No command defined")
 
+		self.__printer.debug("Command", "Executing '" + self.main_command + str(self.params).strip('[]') + "'")
 		DEVNULL = open(os.devnull, 'wb')
 		return_code = subprocess.call(self.main_command.split(' ') + self.params, stdout=DEVNULL, stderr=DEVNULL)
 		DEVNULL.close()

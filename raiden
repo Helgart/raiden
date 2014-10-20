@@ -2,6 +2,7 @@
 
 import os
 import argparse
+
 from launcher.utilities.printer import Printer
 from launcher.finder import Finder
 from launcher.runner import Runner
@@ -29,13 +30,16 @@ if arguments.v != None:
 
 ## Checking if user want to override some paths
 if arguments.platform:
+	printer.debug("Raiden", "Platform path : " + arguments.platform)
 	platform = finder.search(arguments.platform)
 else:
+	printer.debug("Raiden", "Platform path : " + raiden_path + "/platform")
 	platform = finder.search(raiden_path + "/platform")
 
 ## Loading applications is not mandatory
 if arguments.applications:
-	applications = finder.search()
+	printer.debug("Raiden", "Application path : " + arguments.applications)
+	applications = finder.search(arguments.applications)
 
 ## Launch docker collections
 ## - First the platform
@@ -45,7 +49,7 @@ if arguments.applications:
 ## Consider that you can't run an application without platform
 ## If you only have applications, well, this is your platform
 if not platform:
-	printer.info("No images found for platform")
+	printer.info("Raiden", "No images found for platform")
 	exit(1)
 
 runner = Runner()
@@ -54,4 +58,4 @@ runner.run(platform, arguments.action)
 if not applications == None:
 	runner.run(applications, arguments.action)
 
-printer.info("Done !")
+printer.info("Raiden", "Done !")

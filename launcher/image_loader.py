@@ -1,6 +1,8 @@
 import os
 import yaml
 
+from utilities.printer import Printer
+
 from container.base_container import BaseContainer
 from container.application import Application
 from container.platform import Platform
@@ -11,7 +13,11 @@ class ImageLoader:
 	def load(self, path):
 		""" Instanciate a container class from a configuration file """
 
+		printer = Printer()
+
 		configuration_file = path + "/config.yml"
+
+		printer.debug("Loader", "Loading file " + configuration_file)
 
 		## In next version values will be generated and saved in a file
 		## But for now we must have a configuration file with at least a name
@@ -27,10 +33,13 @@ class ImageLoader:
 		## Some dynamic import will be added here in future
 		## But right now, no use for it
 		if configuration['type'] == "application":
+			printer.debug("Loader", "Container type: Application")
 			image = Application(path, configuration)
 		elif configuration['type'] == "platform":
+			printer.debug("Loader", "Container type: Platform")
 			image = Platform(path, configuration)
 		else:
+			printer.debug("Loader", "Unknown container type")
 			image = BaseContainer(path, configuration)
 
 		return image

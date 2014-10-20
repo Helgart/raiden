@@ -2,11 +2,15 @@ from base_command import BaseCommand
 from stop_command import StopCommand
 from run_command import RunCommand
 
+from launcher.utilities.printer import Printer
+
 class RestartCommand(BaseCommand):
 	""" restart container """
 
 	def __init__(self):
 		super(RestartCommand, self).__init__()
+
+		self.__printer = Printer()
 
 	def execute(self, container):
 		"""
@@ -15,6 +19,8 @@ class RestartCommand(BaseCommand):
 				- RunCommand : to start container
 		"""
 
+		self.__printer.info("Restart", "Restarting " + container.internal_name)
+
 		## First, we stop the container
 		stop_command = StopCommand()
 		return_value = stop_command.execute(container)
@@ -22,7 +28,7 @@ class RestartCommand(BaseCommand):
 		## Something happend while stopping container
 		## so we need to stop here
 		if return_value:
-			print "Oops, seems like we can't stop container"
+			self.__printer.warning("Restart", "Oops, seems like we can't stop container")
 			return self.RETURN_WONT_DO
 
 		# refreshing container status

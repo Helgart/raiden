@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+from launcher.utilities.printer import Printer
 from base_command import BaseCommand
 
 ## @todo In next step, some trigger using container inspect would be nice !
@@ -13,6 +14,8 @@ class RunCommand(BaseCommand):
 
 		## RunCommand Filters for configuration file values
 		self.filters = ["detached", "interactive", "tty", "expose"]
+
+		self.__printer = Printer()
 
 	def filter_detached(self, param):
 		""" filter -d param for docker run """
@@ -56,25 +59,26 @@ class RunCommand(BaseCommand):
 
 		## Already running ? Nothing to do then ...
 		if container.status == container.STATUS_RUNNING:
-			print "Container " + container.internal_name + " already running"
+			self.__printer.info("Run", "Container " + container.internal_name + " already running")
 			return self.RETURN_WONT_DO
 
 		## Container's image is not build, so we build it
 		if container.status == container.STATUS_UNKNOWN:
-			print "Building image " + container.internal_image_name
+			self.__printer.info("Run", "Building image " + container.internal_image_name)
+			self.__printer.debug("Run", "Executing 'build -t " + container.internal_image_name + " " + container.path + "'")
 			DEVNULL = open(os.devnull, 'wb')
 			subprocess.call(['docker', 'build', '-t', container.internal_image_name, container.path], stdout=DEVNULL, stderr=DEVNULL)
 			DEVNULL.close()
 
 		## Container is stopped, just need to resume it
 		if container.status == container.STATUS_STOPPED:
-			print "Resuming container " + container.internal_name
+			self.__printer.info("Run", "Resuming container " + container.internal_name)
 			self.main_command = "docker start"
 			self.params.append(container.internal_name)
 			return super(RunCommand, self).execute(container)
 		
 		## Default behavior, we run container from configuration file
-		print "Running container " + container.internal_name
+		self.__printer.info("Run", "Running container " + container.internal_name)
 		
 		## Adding params
 		self.addParams(container.options)

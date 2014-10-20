@@ -1,3 +1,5 @@
+import datetime
+
 from singleton import Singleton
 from color import Color
 
@@ -14,34 +16,34 @@ class Printer:
 	def __init__(self):
 		self.level = self.INFO
 
-	def debug(self, message):
+	def debug(self, origin, message):
 		""" print a debug message """
 
 		if self.level > self.DEBUG:
 			return
 
-		print message
+		print '[DEBUG][' + str(datetime.datetime.now()) + '][' + origin + '] ' + message
 
-	def info(self, message):
+	def info(self, origin, message):
 		""" print an info message """
 
 		if self.level > self.INFO:
 			return
 
-		print Color.INFO + message + Color.ENDC
+		print Color.INFO + '[INFOS][' + str(datetime.datetime.now()) + '][' + origin + '] ' + message + Color.ENDC
 
-	def warning(self, message):
+	def warning(self, origin, message):
 		""" print a warning message """
 
 		if self.level > self.WARNING:
 			return
 
-		print Color.WARNING + message + Color.ENDC
+		print Color.WARNING + '[WARNING][' + str(datetime.datetime.now()) + '][' + origin + '] ' + message + Color.ENDC
 
-	def error(self, message):
+	def error(self, origin, message):
 		""" print an error message """
 
 		if self.level > self.ERROR:
 			return
 
-		print Color.FAIL + message + Color.ENDC
+		print Color.FAIL + '[ERROR][' + str(datetime.datetime.now()) + '][' + origin + '] ' + message + Color.ENDC
