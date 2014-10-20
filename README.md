@@ -39,6 +39,7 @@ options:
     detached: true
     interactive: true
     tty: true
+    volatile: true
     expose:
         - "80:80"
 ```
