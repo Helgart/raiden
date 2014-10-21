@@ -22,6 +22,6 @@ class Finder:
 				printer.debug("Finder", "Checking " + path + "/" + image)
 				if os.path.isfile(path + "/" + image + "/config.yml"):
 					container = loader.load(path + "/" + image)
-				images.append(container)
+					images.append(container)
 
 		return images

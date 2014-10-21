@@ -18,24 +18,24 @@ class BaseCommand(object):
 
 		self.__printer = Printer()
 
-	def filter(self, param):
+	def filter(self, param, container = None):
 		""" Filter a param, take a param tupple and return the new one """
 
 		if param[0] in self.filters:
 			try:
 				filter_method = getattr(self, "filter_" + param[0])
 				self.__printer.debug("Command", "Executing filter " + param[0])
-				return filter_method(param)
+				return filter_method(param, container)
 			except AttributeError:
 				self.__printer.warning("Command", "Filter " + param[0] + " not implemented passing")
 				pass
 
 			return param
 
-	def addParam(self, param):
+	def addParam(self, param, container = None):
 		""" Add a parameter to command line from tupple """
 
-		filtered = self.filter(param)
+		filtered = self.filter(param, container)
 		self.__printer.debug("Command", "Adding parameter : " + str(filtered))
 		if filtered != None and isinstance(filtered, list):
 			self.params.extend(filtered)
@@ -44,11 +44,11 @@ class BaseCommand(object):
 
 		return self
 
-	def addParams(self, params):
+	def addParams(self, params, container = None):
 		""" Add parameters to command line from an array of tupple """
 
 		for param, value in params.iteritems():
-			self.addParam([param, value])
+			self.addParam([param, value], container)
 
 		return self
 

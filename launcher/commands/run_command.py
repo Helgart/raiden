@@ -13,25 +13,25 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["detached", "interactive", "tty", "expose", "volatile"]
+		self.filters = ["detached", "interactive", "tty", "expose", "volatile", "mount"]
 
 		self.__printer = Printer()
 
-	def filter_detached(self, param):
+	def filter_detached(self, param, container = None):
 		""" filter -d param for docker run """
 
 		if param:
 			return "-d"
 		return None
 
-	def filter_tty(self, param):
+	def filter_tty(self, param, container = None):
 		""" filter -t param for docker run """
 
 		if param:
 			return "-t"
 		return None
 
-	def filter_expose(self, param):
+	def filter_expose(self, param, container = None):
 		""" filter -p param for docker run """
 
 		port_list = []
@@ -40,19 +40,32 @@ class RunCommand(BaseCommand):
 		
 		return port_list
 
-	def filter_interactive(self, param):
+	def filter_interactive(self, param, container = None):
 		""" filter -i param for docker run """
 
 		if param:
 			return "-i"
 		return None
 
-	def filter_volatile(self, param):
+	def filter_volatile(self, param, container = None):
 		""" filter --rm param for docker run """
 
 		if param:
 			return "--rm"
 		return None
+
+	def filter_mount(self, param, container = None):
+		""" filter -v param for docker run """
+
+		## Need to add some exception handling here
+		## Just to ensure we have a container here
+		mount_list = []
+		for mount in param[1]:
+			mount_split = mount.split(':')
+			mount_split[0] = os.path.abspath(container.path + '/' + mount_split[0])
+			mount_list += ["-v", str.join(':', mount_split)]
+
+		return mount_list
 
 	def execute(self, container):
 		"""
@@ -88,7 +101,7 @@ class RunCommand(BaseCommand):
 		self.__printer.info("Run", "Running container " + container.internal_name)
 		
 		## Adding params
-		self.addParams(container.options)
+		self.addParams(container.options, container)
 		self.params += ["--name", container.internal_name, container.internal_image_name]
 
 		return super(RunCommand, self).execute(container)
