@@ -67,6 +67,15 @@ class RunCommand(BaseCommand):
 
 		return mount_list
 
+	def filter_link(self, param, container = None):
+		""" filter --link param for docker run """
+
+		share_list = []
+		for share in param[1]:
+			share_list += ["--link", share + ":raiden-" + share]
+
+		return share_list
+
 	def execute(self, container):
 		"""
 			Execute command, 4 possible way of execution depending of container state :
