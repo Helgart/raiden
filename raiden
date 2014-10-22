@@ -44,7 +44,7 @@ if arguments.applications:
 ## Launch docker collections
 ## - First the applications
 ## - And then platform
-## Applications are run first to be linked with platform
+## Applications are run first to be linked with platform
 
 ## Platform is, somehow, mandatory
 ## Consider that you can't run an application without platform
@@ -53,10 +53,11 @@ if not platform:
 	printer.info("Raiden", "No images found for platform")
 	exit(1)
 
+runner = Runner()
+
 if not applications == None:
 	runner.run(applications, arguments.action)
 
-runner = Runner()
 runner.run(platform, arguments.action)
 
 printer.info("Raiden", "Done !")

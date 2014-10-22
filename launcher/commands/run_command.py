@@ -72,7 +72,7 @@ class RunCommand(BaseCommand):
 
 		share_list = []
 		for share in param[1]:
-			share_list += ["--link", share + ":raiden-" + share]
+			share_list += ["--link", "raiden-" + share + ":" + share]
 
 		return share_list
 
