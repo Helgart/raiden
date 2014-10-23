@@ -13,7 +13,7 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["detached", "interactive", "tty", "expose", "volatile", "mount"]
+		self.filters = ["detached", "interactive", "tty", "expose", "volatile", "mount", "link"]
 
 		self.__printer = Printer()
 
