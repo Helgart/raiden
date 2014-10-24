@@ -59,8 +59,12 @@ class BaseCommand(object):
 			raise Exception("No command defined")
 
 		self.__printer.debug("Command", "Executing '" + self.main_command + str(self.params).strip('[]') + "'")
-		DEVNULL = open(os.devnull, 'wb')
-		return_code = subprocess.call(self.main_command.split(' ') + self.params, stdout=DEVNULL, stderr=DEVNULL)
-		DEVNULL.close()
+		proc = subprocess.Popen(self.main_command.split(' ') + self.params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout, stderr = proc.communicate()
+
+		if stdout:
+			self.__printer.debug("Command output", stdout)
+		if stderr:
+			self.__printer.debug("Command output", stderr)
 
 		return 0
