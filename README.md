@@ -4,16 +4,17 @@
 ```
 #!bash
 
-usage: raiden [-h] [-v V] [--platform PLATFORM] [--applications APPLICATIONS] action
+usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] action
 
 positional arguments:
-  action                Define launcher action, can be start, stop, restart, clean
+  action             Define launcher action, can be start, stop, restart, delete
 
 optional arguments:
-  -h, --help                                          show this help message and exit
-  -v V                                                  Define log level from 0 (debug) to 3 (error only), default 1 (info)
-  --platform PLATFORM                     Define the platform folder path
-  --applications APPLICATIONS        Define the application folder path
+  -h, --help                show this help message and exit
+  -v V                           Define log level from 0 (debug) to 3 (error only), default 1 (info)
+  --pools POOLS         Define the container pool folder path
+  --targets TARGETS  List of targeted containers. if not defined, command will target all containers
+
 ```
 
 ## What is Raiden ##
@@ -41,9 +42,6 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 
 | Name | Description | Value exemple |
 |---------|-----------------|----------|
-| detached  | Can be true or false. If true, container will be run as a daemon   | true |
-| Intercative | Can be true or false. If true, will keep stdin open if container is not detached | true |
-| tty | can be true or false. if true, will allocate a pseudo tty to container | true |
 | expose | List of port to follow from host to container. Use the synthax *host_port:container_port* | 8080:80 |
 | mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
 | link | list of container we should have access to. Using docker *--link* option | yass |
@@ -58,10 +56,6 @@ name: nginx
 order: 1
 type: platform
 options:
-    detached: false
-    interactive: true
-    tty: true
-    volatile: true
     expose:
         - "80:80"
     mount:
