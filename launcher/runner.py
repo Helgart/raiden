@@ -1,4 +1,5 @@
 import importlib
+from utilities.printer import Printer
 
 class Runner:
 	""" Run a collection of containers """
@@ -6,6 +7,7 @@ class Runner:
 	def run(self, containers, action):
 		""" Run a collection of containers """
 
+		printer = Printer()
 		ordered_containers = sorted(containers, key=lambda x: x.order)
 		for container in ordered_containers:
 
@@ -16,7 +18,10 @@ class Runner:
 				command = command_class()
 
 				## Executing command
-				command.execute(container)
+				return_code = command.execute(container)
+
+				if return_code:
+					printer.error("Runner", "Failed to execute action " + action + " on container " + container.name)
 
 			except AttributeError as e:
 				print e
