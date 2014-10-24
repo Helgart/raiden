@@ -2,9 +2,10 @@
 
 import os
 import argparse
+import string
 
 from launcher.utilities.printer import Printer
-from launcher.finder import Finder
+from launcher.finder.finder import Finder
 from launcher.runner import Runner
 
 ## Starting raiden launcher
@@ -14,6 +15,7 @@ parser.add_argument("action", help="Define launcher action, can be start, stop, 
 parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
 parser.add_argument("--platform", help="Define the platform folder path")
 parser.add_argument("--applications", help="Define the application folder path")
+parser.add_argument("--targets", type=str, help="List of targeted containers. if not defined, command will target all containers")
 arguments = parser.parse_args()
 
 ## setting the raiden root path
@@ -22,6 +24,11 @@ raiden_path = os.path.dirname(os.path.realpath(__file__))
 finder = Finder()
 platform = None
 applications = None
+targets = arguments.targets.split(',') if arguments.targets else None
+
+## adding a filter to finder
+if targets:
+	finder.addFilter('name', targets)
 
 ## Setting global printer
 printer = Printer()
