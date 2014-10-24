@@ -13,23 +13,9 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["detached", "interactive", "tty", "expose", "volatile", "mount", "link"]
+		self.filters = ["expose", "mount", "link"]
 
 		self.__printer = Printer()
-
-	def filter_detached(self, param, container = None):
-		""" filter -d param for docker run """
-
-		if param:
-			return "-d"
-		return None
-
-	def filter_tty(self, param, container = None):
-		""" filter -t param for docker run """
-
-		if param:
-			return "-t"
-		return None
 
 	def filter_expose(self, param, container = None):
 		""" filter -p param for docker run """
@@ -39,20 +25,6 @@ class RunCommand(BaseCommand):
 			port_list += ["-p", port]
 		
 		return port_list
-
-	def filter_interactive(self, param, container = None):
-		""" filter -i param for docker run """
-
-		if param:
-			return "-i"
-		return None
-
-	def filter_volatile(self, param, container = None):
-		""" filter --rm param for docker run """
-
-		if param:
-			return "--rm"
-		return None
 
 	def filter_mount(self, param, container = None):
 		""" filter -v param for docker run """
@@ -111,6 +83,6 @@ class RunCommand(BaseCommand):
 		
 		## Adding params
 		self.addParams(container.options, container)
-		self.params += ["--name", container.internal_name, container.internal_image_name]
+		self.params += ["-d", "--name", container.internal_name, container.internal_image_name]
 
 		return super(RunCommand, self).execute(container)
