@@ -26,6 +26,28 @@ For Raiden to work you need the following package to be installed with **docker*
 
 ## Configuration files ##
 
+Each container folder must have a *raiden.yml* file wich define how container must run, and how it will interact with others. If no configuration file, container will ignored by raiden since he won't know what to do with it. For now oly 3 parameters are mandatory : *name*, *order* and *type*.
+
+### Parameters details ###
+
+| Name | Description | Value exemple | Mantatory |
+|---------|-----------------|----------|--------------|
+| name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
+| order | Used to defined container launching order | 1 | **yes** |
+| type | Can be *platform* or *application*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
+| options | Running options for container, explained just after |  | no |
+
+### Running options details ###
+
+| Name | Description | Value exemple |
+|---------|-----------------|----------|
+| detached  | Can be true or false. If true, container will be run as a daemon   | true |
+| Intercative | Can be true or false. If true, will keep stdin open if container is not detached | true |
+| tty | can be true or false. if true, will allocate a pseudo tty to container | true |
+| expose | List of port to follow from host to container. Use the synthax *host_port:container_port* | 8080:80 |
+| mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
+| link | list of container we should have access to. Using docker *--link* option | yass |
+
 ### Configuration file exemple ###
 
 
@@ -36,10 +58,14 @@ name: nginx
 order: 1
 type: platform
 options:
-    detached: true
+    detached: false
     interactive: true
     tty: true
     volatile: true
     expose:
         - "80:80"
+    mount:
+        - "/some/local/path:/some/container/path"
+    link:
+        - other_container
 ```
