@@ -23,4 +23,4 @@ class Runner:
 				print "Unkown command " + action + " for container " + container.name
 				return False
 
-			return True
+		return True
