@@ -29,8 +29,9 @@ class Finder:
 					## Filtering loaded container
 					## No action must be performed on that container if filtered
 					if self.filter(container):
-						printer.info('Finder', 'Container ' + container.name + ' filtered')
 						images.append(container)
+					else :
+						printer.info('Finder', 'Container ' + container.name + ' filtered')
 
 		return images
 
@@ -38,7 +39,7 @@ class Finder:
 		""" Filter container, return True if container is valid """
 
 		for filter_object in self.filters:
-			if filter_object.filter(container):
+			if not filter_object.filter(container):
 				return False
 		return True
 

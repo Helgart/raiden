@@ -53,13 +53,6 @@ if arguments.applications:
 ## - And then platform
 ## Applications are run first to be linked with platform
 
-## Platform is, somehow, mandatory
-## Consider that you can't run an application without platform
-## If you only have applications, well, this is your platform
-if not platform:
-	printer.info("Raiden", "No images found for platform")
-	exit(1)
-
 runner = Runner()
 
 if not applications == None:
