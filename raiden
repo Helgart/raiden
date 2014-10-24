@@ -13,8 +13,7 @@ from launcher.runner import Runner
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
 parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
-parser.add_argument("--platform", help="Define the platform folder path")
-parser.add_argument("--applications", help="Define the application folder path")
+parser.add_argument("--pools", help="Define the container pool folder path")
 parser.add_argument("--targets", type=str, help="List of targeted containers. if not defined, command will target all containers")
 arguments = parser.parse_args()
 
@@ -22,9 +21,8 @@ arguments = parser.parse_args()
 raiden_path = os.path.dirname(os.path.realpath(__file__))
 
 finder = Finder()
-platform = None
-applications = None
 targets = arguments.targets.split(',') if arguments.targets else None
+pools = arguments.pools.split(',') if arguments.pools else None
 
 ## adding a filter to finder
 if targets:
@@ -35,32 +33,16 @@ printer = Printer()
 if arguments.v != None:
 	printer.level = arguments.v
 
-## Checking platform path
-if arguments.platform:
-	printer.debug("Raiden", "Platform path : " + arguments.platform)
-	platform = finder.search(arguments.platform)
-
-## Loading applications is not mandatory
-if arguments.applications:
-	printer.debug("Raiden", "Application path : " + arguments.applications)
-	applications = finder.search(arguments.applications)
-
 ## well ... if we have no path to check ... we can't do anything
-if not platform and not applications :
+if not pools :
 	printer.error("Raiden", "No path to check")
 	exit(0)
 
-## Launch docker collections
-## - First the applications
-## - And then platform
-## Applications are run first to be linked with platform
+## Checking platform path
+printer.debug("Raiden", "Pools : " + str(pools))
+containers = finder.search(pools)
 
 runner = Runner()
-
-if applications:
-	runner.run(applications, arguments.action)
-
-if platform:
-	runner.run(platform, arguments.action)
+runner.run(containers, arguments.action)
 
 printer.info("Raiden", "Done !")

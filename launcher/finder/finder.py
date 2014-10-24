@@ -10,11 +10,23 @@ class Finder:
 	def __init__(self):
 		self.filters = []
 
-	def search(self, path):
-		""" Search for all platform docker containers in defined paths """
+	def search(self, paths):
+		""" Perform search in all paths """
+
+		containers = []
+
+		for path in paths:
+			containersInPath = self.searchInPath(path)
+			if containersInPath:
+				containers += containersInPath
+
+		return containers
+
+	def searchInPath(self, path):
+		""" Search for all platform docker containers in a defined paths """
 
 		printer = Printer()
-		images = []
+		containersInPath = []
 		loader = ImageLoader()
 
 		printer.debug("Finder", "Searching for docker instances in " + path)
@@ -29,11 +41,11 @@ class Finder:
 					## Filtering loaded container
 					## No action must be performed on that container if filtered
 					if self.filter(container):
-						images.append(container)
+						containersInPath.append(container)
 					else :
 						printer.info('Finder', 'Container ' + container.name + ' filtered')
 
-		return images
+		return containersInPath
 
 	def filter(self, container):
 		""" Filter container, return True if container is valid """
