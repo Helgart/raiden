@@ -35,18 +35,20 @@ printer = Printer()
 if arguments.v != None:
 	printer.level = arguments.v
 
-## Checking if user want to override some paths
+## Checking platform path
 if arguments.platform:
 	printer.debug("Raiden", "Platform path : " + arguments.platform)
 	platform = finder.search(arguments.platform)
-else:
-	printer.debug("Raiden", "Platform path : " + raiden_path + "/platform")
-	platform = finder.search(raiden_path + "/platform")
 
 ## Loading applications is not mandatory
 if arguments.applications:
 	printer.debug("Raiden", "Application path : " + arguments.applications)
 	applications = finder.search(arguments.applications)
+
+## well ... if we have no path to check ... we can't do anything
+if not platform and not applications :
+	printer.error("Raiden", "No path to check")
+	exit(0)
 
 ## Launch docker collections
 ## - First the applications
@@ -55,9 +57,10 @@ if arguments.applications:
 
 runner = Runner()
 
-if not applications == None:
+if applications:
 	runner.run(applications, arguments.action)
 
-runner.run(platform, arguments.action)
+if platform:
+	runner.run(platform, arguments.action)
 
 printer.info("Raiden", "Done !")
