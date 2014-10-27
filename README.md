@@ -59,5 +59,13 @@ options:
     mount:
         - "/some/local/path:/some/container/path"
     link:
-        - other_container
+        - other_container_name
 ```
+
+## Launching order ##
+
+Containers will be launch by their dependencies order. If you have linked containers, those container will be launch first.
+
+## Want to know more ? ##
+
+Platform exemple, or container type definition ? See our wiki for more details !
