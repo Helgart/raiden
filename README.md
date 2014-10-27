@@ -7,14 +7,14 @@
 usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] action
 
 positional arguments:
-  action             Define launcher action, can be start, stop, restart, delete
+  action                        Define launcher action, can be start, stop, restart, delete
 
 optional arguments:
-  -h, --help                show this help message and exit
+  -h, --help                   show this help message and exit
   -v V                           Define log level from 0 (debug) to 3 (error only), default 1 (info)
   --pools POOLS         Define the container pool folder path
   --targets TARGETS  List of targeted containers. if not defined, command will target all containers
-
+  --env ENV                 Define environement to launch
 ```
 
 ## What is Raiden ##
@@ -36,6 +36,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
 | type | Can be *platform* or *application*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
 | options | Running options for container, explained just after |  | no |
+| environement | Override options depending on environement defined on --env option |  | no |
 
 ### Running options details ###
 
@@ -51,16 +52,28 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 ```
 #!yaml
 
-name: nginx
+## Default configuration
+name: apache
 type: platform
 options:
     expose:
         - "80:80"
     mount:
-        - "/some/local/path:/some/container/path"
+        - "pool:/etc/apache2/conf.d"
     link:
         - other_container_name
+
+## Environement overloading
+environements:
+    dev:
+       expose:
+            - "8080:80"
 ```
+
+## Environements ##
+
+Even if it's just for opened ports or more, you always need some specific configuration depending on where ou run your application.
+In raiden configuration file you can add environements using *environement* parameter to override *options* parameters.
 
 ## Launching order ##
 
