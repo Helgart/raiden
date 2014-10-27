@@ -76,6 +76,10 @@ class Runner:
 			printer.error("Runner", e.message)
 			return False
 
+		## For now, just a simple error handling
+		## Will be improved in next version
+		has_errors = False
+
 		for container in containers:
 
 			container.currentEnv = self.env
@@ -91,10 +95,11 @@ class Runner:
 
 				if return_code:
 					printer.error("Runner", "Failed to execute action " + action + " on container " + container.name)
+					has_errors = True
 
 			except AttributeError as e:
 				print e
 				print "Unkown command " + action + " for container " + container.name
 				return False
 
-		return True
+		return has_errors

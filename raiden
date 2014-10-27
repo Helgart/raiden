@@ -44,6 +44,8 @@ printer.debug("Raiden", "Pools : " + str(pools))
 containers = finder.search(pools)
 
 runner = Runner(arguments.env)
-runner.run(containers, arguments.action)
-
-printer.info("Raiden", "Done !")
+if not runner.run(containers, arguments.action):
+	printer.info("Raiden", "Done !")
+else:
+	printer.warning("Raiden", "There has been some errors during execution, your plateform can be unstable")
+	exit(1)
