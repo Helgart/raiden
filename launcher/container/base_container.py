@@ -21,7 +21,6 @@ class BaseContainer(object):
 		self.__printer = Printer()
 
 		self.__name = ''
-		self.__order = 0
 		self.__options = []
 		self.__inspect = None
 		self.__path = path
@@ -37,12 +36,10 @@ class BaseContainer(object):
 		""" Init the container object using configuration object """
 
 		self.__name = configuration['name']
-		self.__order = configuration['order']
 		self.__options = configuration['options']
 
 		self.__printer.debug("Container", "Container options")
 		self.__printer.debug("Container", "Name : " + self.__name)
-		self.__printer.debug("Container", "Order : " + str(self.__order))
 		self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))
 
 	def refresh_status(self):
@@ -116,10 +113,6 @@ class BaseContainer(object):
 	@property
 	def internal_image_name(self):
 		return self.__internal_image_name
-
-	@property
-	def order(self):
-		return self.__order
 
 	@property
 	def options(self):

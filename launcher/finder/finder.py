@@ -35,7 +35,7 @@ class Finder:
 		for image in os.listdir(path):
 			if os.path.isdir(path + "/" + image):
 				printer.debug("Finder", "Checking " + path + "/" + image)
-				if os.path.isfile(path + "/" + image + "/config.yml"):
+				if os.path.isfile(path + "/" + image + "/raiden.yml"):
 					container = loader.load(path + "/" + image)
 
 					## Filtering loaded container
@@ -70,7 +70,6 @@ class Finder:
 			
 
 		except AttributeError as e:
-			print e
 			print "Unkown filter " + name
 			return False
 

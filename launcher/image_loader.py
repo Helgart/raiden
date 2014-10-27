@@ -15,7 +15,7 @@ class ImageLoader:
 
 		printer = Printer()
 
-		configuration_file = path + "/config.yml"
+		configuration_file = path + "/raiden.yml"
 
 		printer.debug("Loader", "Loading file " + configuration_file)
 
