@@ -5,6 +5,9 @@ from utilities.printer import Printer
 class Runner:
 	""" Run a collection of containers """
 
+	def __init__(self, env = None):
+		self.env = env
+
 	def __elementIsSorted(self, name, sortedList):
 		""" Check if container has already been sorted """
 
@@ -74,6 +77,8 @@ class Runner:
 			return False
 
 		for container in containers:
+
+			container.currentEnv = self.env
 
 			## We try to execute requested action
 			try:

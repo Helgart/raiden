@@ -25,6 +25,9 @@ class BaseContainer(object):
 		self.__inspect = None
 		self.__path = path
 		self.__status = None
+		self.__environements = {}
+		self.__computedOptions = None
+		self.__currentEnv = None
 
 		self.init(configuration)
 		self.__internal_name = "raiden-" + self.name
@@ -98,6 +101,11 @@ class BaseContainer(object):
 
 		DEVNULL.close()
 
+	def addEnv(self, name, values):
+		""" Load environement running options """
+
+		self.__environements[name] = values
+
 	##
 	## Getters and Setters definition
 	##
@@ -116,11 +124,24 @@ class BaseContainer(object):
 
 	@property
 	def options(self):
+		if self.currentEnv and self.__environements.has_key(self.currentEnv):
+			if not self.__computedOptions:
+				self.__computedOptions = self.__options.copy()
+				self.__computedOptions.update(self.__environements[self.currentEnv])
+			return self.__computedOptions
 		return self.__options
 
 	@property
 	def path(self):
 		return self.__path
+
+	@property
+	def currentEnv(self):
+		return self.__currentEnv
+
+	@currentEnv.setter
+	def currentEnv(self, currentEnv):
+		self.__currentEnv = currentEnv
 
 	@property
 	def status(self):

@@ -42,4 +42,9 @@ class ImageLoader:
 			printer.debug("Loader", "Unknown container type")
 			image = BaseContainer(path, configuration)
 
+		## Adding environements
+		if configuration.has_key('environements'):
+			for env_name, env_values in configuration['environements'].items():
+				image.addEnv(env_name, env_values)
+
 		return image
