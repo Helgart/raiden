@@ -27,14 +27,13 @@ For Raiden to work you need the following package to be installed with **docker*
 
 ## Configuration files ##
 
-Each container folder must have a *raiden.yml* file wich define how container must run, and how it will interact with others. If no configuration file, container will ignored by raiden since he won't know what to do with it. For now oly 3 parameters are mandatory : *name*, *order* and *type*.
+Each container folder must have a *raiden.yml* file wich define how container must run, and how it will interact with others. If no configuration file, container will ignored by raiden since he won't know what to do with it. For now oly 3 parameters are mandatory : *name* and *type*.
 
 ### Parameters details ###
 
 | Name | Description | Value exemple | Mantatory |
 |---------|-----------------|----------|--------------|
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
-| order | Used to defined container launching order | 1 | **yes** |
 | type | Can be *platform* or *application*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
 | options | Running options for container, explained just after |  | no |
 
@@ -53,7 +52,6 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 #!yaml
 
 name: nginx
-order: 1
 type: platform
 options:
     expose:
