@@ -4,7 +4,10 @@
 ```
 #!bash
 
-usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] action
+usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] [--env ENV]
+              [--log-path LOG_PATH] [--log-level LOG_LEVEL]
+              [--log-name LOG_NAME]
+              action
 
 positional arguments:
   action                        Define launcher action, can be start, stop, restart, delete
