@@ -34,7 +34,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 | Name | Description | Value exemple | Mantatory |
 |---------|-----------------|----------|--------------|
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
-| type | Can be *platform* or *application*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
+| type | Can be *platform*, *application* or *layer*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
 | options | Running options for container, explained just after |  | no |
 | environement | Override options depending on environement defined on --env option |  | no |
 
@@ -45,6 +45,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 | expose | List of port to follow from host to container. Use the synthax *host_port:container_port* | 8080:80 |
 | mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
 | link | list of container we should have access to. Using docker *--link* option | yass |
+| depend | List of image dependencies, those image will be run (or just build) first | laravel |
 
 ### Configuration file exemple ###
 
@@ -62,6 +63,8 @@ options:
         - "pool:/etc/apache2/conf.d"
     link:
         - other_container_name
+    depend:
+        - php
 
 ## Environement overloading
 environements:
