@@ -71,6 +71,10 @@ class RunCommand(BaseCommand):
 			subprocess.call(['docker', 'build', '-t', container.internal_image_name, container.path], stdout=DEVNULL, stderr=DEVNULL)
 			DEVNULL.close()
 
+		## To go any further, image must be runnable
+		if not container.runnable:
+			return self.RETURN_SUCCESS
+
 		## Container is stopped, just need to resume it
 		if container.status == container.STATUS_STOPPED:
 			self.__printer.info("Run", "Resuming container " + container.internal_name)

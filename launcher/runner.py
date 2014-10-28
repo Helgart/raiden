@@ -35,17 +35,24 @@ class Runner:
 
 			## Case if a container has no dependencies
 			## We can directly push it to the sorted list
-			if not containers[index].options.has_key('link'):
+			## Will be independant containers or layers
+			if not containers[index].options.has_key('link') and not containers[index].options.has_key('depend'):
 				resolved = True
 
 			## So the container has dependencies,
 			## we need to check if they're resolved
 			if not resolved:
 				resolved = True
-				for link in containers[index].options['link']:
-					if not self.__elementIsSorted(link, sorted_containers):
-						resolved = False
-						break
+				if containers[index].options.has_key('depend'):
+					for dependency in containers[index].options['depend']:
+						if not self.__elementIsSorted(dependency, sorted_containers):
+							resolved = False
+							break
+				else:
+					for link in containers[index].options['link']:
+						if not self.__elementIsSorted(link, sorted_containers):
+							resolved = False
+							break
 
 			## Dependency is resolved !
 			## Cool, let's add it to the sorted list
@@ -60,7 +67,7 @@ class Runner:
 				index += 1
 
 		if len(unsorted_containers):
-			raise Exception("Can't resolve dependencies")
+			raise Exception("Can't resolve dependencies for containers : " + str(map(lambda x: x.name, unsorted_containers)))
 
 		return sorted_containers
 

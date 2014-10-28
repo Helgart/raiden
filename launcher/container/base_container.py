@@ -21,13 +21,14 @@ class BaseContainer(object):
 		self.__printer = Printer()
 
 		self.__name = ''
-		self.__options = []
+		self.__options = {}
 		self.__inspect = None
 		self.__path = path
 		self.__status = None
 		self.__environements = {}
 		self.__computedOptions = None
 		self.__currentEnv = None
+		self.__runnable = True
 
 		self.init(configuration)
 		self.__internal_name = "raiden-" + self.name
@@ -39,11 +40,17 @@ class BaseContainer(object):
 		""" Init the container object using configuration object """
 
 		self.__name = configuration['name']
-		self.__options = configuration['options']
+		
+		if 'options' in configuration:
+			self.__options = configuration['options']
 
 		self.__printer.debug("Container", "Container options")
 		self.__printer.debug("Container", "Name : " + self.__name)
-		self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))
+		
+		if 'options' in configuration:
+			self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))
+		else:
+			self.__printer.debug("Container", "No options")
 
 	def refresh_status(self):
 		"""
@@ -149,4 +156,7 @@ class BaseContainer(object):
 			self.refresh_status()
 		self.__printer.debug("Container", "Using status in cache")
 		return self.__status
-	
+
+	@property
+	def runnable(self):
+		return self.__runnable
