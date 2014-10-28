@@ -10,11 +10,14 @@ positional arguments:
   action                        Define launcher action, can be start, stop, restart, delete
 
 optional arguments:
-  -h, --help                   show this help message and exit
-  -v V                           Define log level from 0 (debug) to 3 (error only), default 1 (info)
-  --pools POOLS         Define the container pool folder path
-  --targets TARGETS  List of targeted containers. if not defined, command will target all containers
-  --env ENV                 Define environement to launch
+  -h, --help                           show this help message and exit
+  -v V                                   Define log level from 0 (debug) to 3 (error only), default 1 (info)
+  --pools POOLS                 Define the container pool folder path
+  --targets TARGETS          List of targeted containers. if not defined, command will target all containers
+  --env ENV                         Define environement to launch
+  --log-path LOG_PATH      Define where log should be written. No logging if not define
+  --log-level LOG_LEVEL    Define log level
+  --log-name LOG_NAME   Define logname. default raiden
 ```
 
 ## What is Raiden ##
