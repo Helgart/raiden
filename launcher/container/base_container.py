@@ -20,32 +20,33 @@ class BaseContainer(object):
 
 		self.__printer = Printer()
 
-		self.__name = ''
+		self.name = ''
+		self.path = path
+		self.environements = {}
+		self.currentEnv = None
+		self.runnable = True
+		
 		self.__options = {}
 		self.__inspect = None
-		self.__path = path
 		self.__status = None
-		self.__environements = {}
 		self.__computedOptions = None
-		self.__currentEnv = None
-		self.__runnable = True
 
 		self.init(configuration)
-		self.__internal_name = "raiden-" + self.name
-		self.__internal_image_name = "raiden-" + self.name + "-image"
+		self.internal_name = "raiden-" + self.name
+		self.internal_image_name = "raiden-" + self.name + "-image"
 
-		self.__printer.info("Container", "Container " + self.__internal_name + " from image " + self.__internal_image_name + " loaded")
+		self.__printer.info("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
 
 	def init(self, configuration):
 		""" Init the container object using configuration object """
 
-		self.__name = configuration['name']
+		self.name = configuration['name']
 		
 		if 'options' in configuration:
 			self.__options = configuration['options']
 
 		self.__printer.debug("Container", "Container options")
-		self.__printer.debug("Container", "Name : " + self.__name)
+		self.__printer.debug("Container", "Name : " + self.name)
 		
 		if 'options' in configuration:
 			self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))
@@ -111,44 +112,20 @@ class BaseContainer(object):
 	def addEnv(self, name, values):
 		""" Load environement running options """
 
-		self.__environements[name] = values
+		self.environements[name] = values
 
 	##
 	## Getters and Setters definition
 	##
 
 	@property
-	def name(self):
-		return self.__name
-
-	@property
-	def internal_name(self):
-		return self.__internal_name
-
-	@property
-	def internal_image_name(self):
-		return self.__internal_image_name
-
-	@property
 	def options(self):
-		if self.currentEnv and self.__environements.has_key(self.currentEnv):
+		if self.currentEnv and self.environements.has_key(self.currentEnv):
 			if not self.__computedOptions:
 				self.__computedOptions = self.__options.copy()
-				self.__computedOptions.update(self.__environements[self.currentEnv])
+				self.__computedOptions.update(self.environements[self.currentEnv])
 			return self.__computedOptions
 		return self.__options
-
-	@property
-	def path(self):
-		return self.__path
-
-	@property
-	def currentEnv(self):
-		return self.__currentEnv
-
-	@currentEnv.setter
-	def currentEnv(self, currentEnv):
-		self.__currentEnv = currentEnv
 
 	@property
 	def status(self):
@@ -156,7 +133,3 @@ class BaseContainer(object):
 			self.refresh_status()
 		self.__printer.debug("Container", "Using status in cache")
 		return self.__status
-
-	@property
-	def runnable(self):
-		return self.__runnable

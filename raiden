@@ -16,10 +16,10 @@ parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (
 parser.add_argument("--pools", help="Define the container pool folder path")
 parser.add_argument("--targets", type=str, help="List of targeted containers. if not defined, command will target all containers")
 parser.add_argument("--env", type=str, help="Define environement to launch")
+parser.add_argument("--log-path", type=str, help="Define where log should be written. No logging if not define")
+parser.add_argument("--log-level", type=str, help="Define log level")
+parser.add_argument("--log-name", default="raiden", type=str, help="Define logname. default raiden")
 arguments = parser.parse_args()
-
-## setting the raiden root path
-raiden_path = os.path.dirname(os.path.realpath(__file__))
 
 finder = Finder()
 targets = arguments.targets.split(',') if arguments.targets else None
@@ -33,6 +33,11 @@ if targets:
 printer = Printer()
 if arguments.v != None:
 	printer.level = arguments.v
+
+
+## Do printer need to log ?
+if arguments.log_path:
+	printer.setLogger(arguments.log_path + "/" + arguments.log_name + ".log", arguments.log_level)
 
 ## well ... if we have no path to check ... we can't do anything
 if not pools :

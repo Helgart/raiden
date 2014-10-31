@@ -5,4 +5,4 @@ class Layer(BaseContainer):
 
 	def __init__(self, path, configuration = None):
 		super(Layer, self).__init__(path, configuration)
-		self.__runnable = False
+		self.runnable = False
