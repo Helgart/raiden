@@ -19,6 +19,9 @@ class RestartCommand(BaseCommand):
 				- RunCommand : to start container
 		"""
 
+		if not container.runnable:
+			return
+
 		self.__printer.info("Restart", "Restarting " + container.internal_name)
 
 		## First, we stop the container

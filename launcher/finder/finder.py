@@ -43,7 +43,7 @@ class Finder:
 					if self.filter(container):
 						containersInPath.append(container)
 					else :
-						printer.info('Finder', 'Container ' + container.name + ' filtered')
+						printer.debug('Finder', 'Container ' + container.name + ' filtered')
 
 		return containersInPath
 

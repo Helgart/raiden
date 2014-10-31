@@ -35,7 +35,7 @@ class BaseContainer(object):
 		self.internal_name = "raiden-" + self.name
 		self.internal_image_name = "raiden-" + self.name + "-image"
 
-		self.__printer.info("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
+		self.__printer.debug("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
 
 	def init(self, configuration):
 		""" Init the container object using configuration object """

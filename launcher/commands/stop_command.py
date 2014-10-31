@@ -14,6 +14,9 @@ class StopCommand(BaseCommand):
 	def execute(self, container):
 		""" Stop container if running """
 
+		if not container.runnable:
+			return
+
 		if not container.status == container.STATUS_RUNNING:
 			self.__printer.info("Stop", "Container " + container.internal_name + " is not running")
 			return self.RETURN_SUCCESS
