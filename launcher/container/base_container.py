@@ -46,7 +46,7 @@ class BaseContainer(object):
 		self.name = configuration['name']
 		self.type = configuration['type']
 
-		self.dockerfile = os.path.realpath(path + '/' + configuration['dockerfilePrefix'] + '/Dockerfile') if 'dockerfilePrefix' in configuration else path
+		self.dockerfile = os.path.realpath(path + '/' + configuration['dockerfilePrefix']) if 'dockerfilePrefix' in configuration else path
 		
 		if 'options' in configuration:
 			self.__options = configuration['options']
@@ -54,6 +54,7 @@ class BaseContainer(object):
 		self.__printer.debug("Container", "Container options")
 		self.__printer.debug("Container", "Name : " + self.name)
 		self.__printer.debug("Container", "Type : " + self.type)
+		self.__printer.debug("Container", "Dockerfile : " + self.dockerfile)
 		
 		if 'options' in configuration:
 			self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))

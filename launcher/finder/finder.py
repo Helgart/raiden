@@ -5,28 +5,84 @@ from launcher.utilities.printer import Printer
 from launcher.image_loader import ImageLoader
 
 class Finder:
-	""" Run all dockers container in project folder """
+	"""
+		Run all dockers container in project folder
+		All of this is purely temporary, waiting for a proper finder implementation
+	"""
 
 	def __init__(self):
 		self.filters = []
+		self.targets = None
 
 	def search(self, paths):
 		""" Perform search in all paths """
 
-		containers = []
+		containers = {}
+		containersList = []
 
 		for path in paths:
 			containersInPath = self.searchInPath(path)
 			if containersInPath:
-				containers += containersInPath
+				containers = dict(containersInPath.items() + containers.items())
 
-		return containers
+		## remove unused containers if targets are set
+		containers = self.filterUnused(containers)
+
+		for key,container in containers.items():
+			containersList.append(container)
+
+		return containersList
+
+	def findDependencies(self, target, containers, usedOnes = {}):
+		""" Recursivelly checking for dependencies """
+
+		if target in usedOnes:
+			return {}
+
+		containersBuffer = {}
+
+		if containers[target]:
+
+			dependencies = []
+			containersBuffer[target] = containers[target]
+
+			if containers[target].options.has_key('depend'):
+				dependencies = containers[target].options['depend']
+			if containers[target].options.has_key('link'):
+				dependencies += containers[target].options['link']
+
+			for dependency in dependencies:
+				containersBuffer = dict(containersBuffer.items() + self.findDependencies(dependency, containers, containersBuffer).items())
+
+		return containersBuffer
+			
+
+	def filterUnused(self, containers):
+		""" If targets is defined, remove unused containers """
+
+		if self.targets == None:
+			return
+
+		printer = Printer()
+		usedOnes = {}
+
+		for target in self.targets:
+
+			## Finder can't resolve targets
+			if not target in containers:
+				printer.error("Finder", "Can't find " + target)
+				continue
+
+			usedOnes = dict(usedOnes.items() + self.findDependencies(target, containers).items())
+
+		return usedOnes
+
 
 	def searchInPath(self, path):
 		""" Search for all platform docker containers in a defined paths """
 
 		printer = Printer()
-		containersInPath = []
+		containersInPath = {}
 		loader = ImageLoader()
 
 		printer.debug("Finder", "Searching for docker instances in " + path)
@@ -41,7 +97,7 @@ class Finder:
 					## Filtering loaded container
 					## No action must be performed on that container if filtered
 					if self.filter(container):
-						containersInPath.append(container)
+						containersInPath[container.name] = container
 					else :
 						printer.debug('Finder', 'Container ' + container.name + ' filtered')
 

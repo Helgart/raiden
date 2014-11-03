@@ -1,25 +1,24 @@
-# Raiden infrastructure #
+# Raiden #
 
 ## Command usage ##
 ```
 #!bash
 
-usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] [--env ENV]
-              [--log-path LOG_PATH] [--log-level LOG_LEVEL]
-              [--log-name LOG_NAME]
-              action
+usage: raiden [-h] [-v V] [--pools POOLS] [--env ENV] [--log-path LOG_PATH]
+              [--log-level LOG_LEVEL] [--log-name LOG_NAME]
+              action [images [images ...]]
 
 positional arguments:
   action                Define launcher action, can be start, stop, restart,
                         delete
+  images                List of targeted containers. if not defined, command
+                        will target all containers
 
 optional arguments:
   -h, --help            show this help message and exit
   -v V                  Define log level from 0 (debug) to 3 (error only),
                         default 1 (info)
   --pools POOLS         Define the container pool folder path
-  --targets TARGETS     List of targeted containers. if not defined, command
-                        will target all containers
   --env ENV             Define environement to launch
   --log-path LOG_PATH   Define where log should be written. No logging if not
                         define
@@ -46,6 +45,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 |---------|-----------------|----------|--------------|
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
 | type | Can be *platform*, *application* or *layer*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
+| dockerfilePrefix | Prefix path to dockerfile if not in the same folder as Raiden configuration file | docker/ | no |
 | options | Running options for container, explained just after |  | no |
 | environement | Override options depending on environement defined on --env option |  | no |
 
@@ -67,6 +67,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 ## Default configuration
 name: apache
 type: platform
+dockerfilePrefix: "dockerfile/"
 options:
     expose:
         - "80:80"
