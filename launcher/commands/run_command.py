@@ -44,7 +44,7 @@ class RunCommand(BaseCommand):
 
 		share_list = []
 		for share in param[1]:
-			share_list += ["--link", "raiden-" + share + ":" + share]
+			share_list += ["--link", "raiden-application-" + share + ":" + share]
 
 		return share_list
 
@@ -66,9 +66,9 @@ class RunCommand(BaseCommand):
 		## Container's image is not build, so we build it
 		if container.status == container.STATUS_UNKNOWN:
 			self.__printer.info("Run", "Building image " + container.internal_image_name)
-			self.__printer.debug("Run", "Executing 'build -t " + container.internal_image_name + " " + container.path + "'")
+			self.__printer.debug("Run", "Executing 'build -t " + container.internal_image_name + " " + container.dockerfile + "'")
 			DEVNULL = open(os.devnull, 'wb')
-			subprocess.call(['docker', 'build', '-t', container.internal_image_name, container.path], stdout=DEVNULL, stderr=DEVNULL)
+			subprocess.call(['docker', 'build', '-t', container.internal_image_name, container.dockerfile], stdout=DEVNULL, stderr=DEVNULL)
 			DEVNULL.close()
 
 		## To go any further, image must be runnable

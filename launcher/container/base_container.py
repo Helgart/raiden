@@ -1,4 +1,5 @@
 import os
+import os.path
 import subprocess
 import json
 
@@ -22,6 +23,8 @@ class BaseContainer(object):
 
 		self.name = ''
 		self.path = path
+		self.type = 'base'
+		self.dockerfile = ''
 		self.environements = {}
 		self.currentEnv = None
 		self.runnable = True
@@ -31,22 +34,26 @@ class BaseContainer(object):
 		self.__status = None
 		self.__computedOptions = None
 
-		self.init(configuration)
-		self.internal_name = "raiden-" + self.name
-		self.internal_image_name = "raiden-" + self.name + "-image"
+		self.init(configuration, path)
+		self.internal_name = "raiden-" + self.type + "-" + self.name
+		self.internal_image_name = "raiden-" + self.type + "-" + self.name + "-image"
 
 		self.__printer.debug("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
 
-	def init(self, configuration):
+	def init(self, configuration, path):
 		""" Init the container object using configuration object """
 
 		self.name = configuration['name']
+		self.type = configuration['type']
+
+		self.dockerfile = os.path.realpath(path + '/' + configuration['dockerfilePrefix'] + '/Dockerfile') if 'dockerfilePrefix' in configuration else path
 		
 		if 'options' in configuration:
 			self.__options = configuration['options']
 
 		self.__printer.debug("Container", "Container options")
 		self.__printer.debug("Container", "Name : " + self.name)
+		self.__printer.debug("Container", "Type : " + self.type)
 		
 		if 'options' in configuration:
 			self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))
