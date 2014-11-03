@@ -22,8 +22,8 @@ parser.add_argument("--log-name", default="raiden", type=str, help="Define logna
 arguments = parser.parse_args()
 
 finder = Finder()
-targets = arguments.targets.split(',') if arguments.targets else None
-pools = arguments.pools.split(',') if arguments.pools else None
+targets = list(set(arguments.targets.split(','))) if arguments.targets else None
+pools = list(set(arguments.pools.split(','))) if arguments.pools else None
 
 ## adding a filter to finder
 if targets:
