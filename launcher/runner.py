@@ -93,8 +93,13 @@ class Runner:
 
 			## We try to execute requested action
 			try:
-				command_module = importlib.import_module("launcher.commands." + action + "_command")
-				command_class = getattr(command_module, action.title() + "Command")
+				# Some sanity treatment
+				command_names = action.split('-')
+				command_module_name = "launcher.commands." + '_'.join(command_names) + "_command"
+				command_class_name = ''.join(map(lambda x: x.title(), command_names)) + 'Command'
+
+				command_module = importlib.import_module(command_module_name)
+				command_class = getattr(command_module, command_class_name)
 				command = command_class()
 
 				## Executing command

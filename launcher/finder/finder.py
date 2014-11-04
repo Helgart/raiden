@@ -60,8 +60,9 @@ class Finder:
 	def filterUnused(self, containers):
 		""" If targets is defined, remove unused containers """
 
+		## Well ... nothing to filter so we use all images
 		if self.targets == None:
-			return
+			return containers
 
 		printer = Printer()
 		usedOnes = {}
