@@ -20,7 +20,7 @@ class CleanImageCommand(BaseCommand):
 		return_value = clean_command.execute(container)
 
 		self.params.append(container.internal_image_name)		
-		super(CleanImageCommand, self).execute(container)
+		result = super(CleanImageCommand, self).execute(container)
 
 		self.__printer.info("Clean", "Cleaning image " + container.internal_image_name)
-		return 
+		return result

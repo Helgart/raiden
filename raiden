@@ -11,7 +11,7 @@ from launcher.runner import Runner
 ## Starting raiden launcher
 ## Defining application arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
+parser.add_argument("action", help="Define launcher action, can be run, stop, restart, clean, clean-image")
 parser.add_argument('images', nargs='*', help="List of targeted containers. if not defined, command will target all containers")
 parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
 parser.add_argument("--pools", help="Define the container pool folder path")

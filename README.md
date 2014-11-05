@@ -1,16 +1,15 @@
 # Raiden #
 
 ## Command usage ##
-```
-#!bash
 
+```
 usage: raiden [-h] [-v V] [--pools POOLS] [--env ENV] [--log-path LOG_PATH]
               [--log-level LOG_LEVEL] [--log-name LOG_NAME]
               action [images [images ...]]
 
 positional arguments:
-  action                Define launcher action, can be start, stop, restart,
-                        delete
+  action                Define launcher action, can be run, stop, restart,
+                        clean, clean-image
   images                List of targeted containers. if not defined, command
                         will target all containers
 
@@ -35,16 +34,28 @@ For Raiden to work you need the following package to be installed with **docker*
 
 * python-yaml
 
-## Configuration files ##
+## Configurations ##
 
 Each container folder must have a *raiden.yml* file wich define how container must run, and how it will interact with others. If no configuration file, container will ignored by raiden since he won't know what to do with it. For now oly 3 parameters are mandatory : *name* and *type*.
+
+### Actions  ###
+
+| Name | Description |
+|------|-------------|
+| run | Run containers and their dependencies. Build images if needed
+| stop | Stop containers |
+| restart | Stop containers and then start them again |
+| clean | Stop containers and delete them |
+| clean-image | Stop containers, delete them and their images |
+
+For each one of these action, you can target specific containers. If don't target any, all containers will be targeted by Raiden. See ... for exemples.
 
 ### Parameters details ###
 
 | Name | Description | Value exemple | Mantatory |
 |---------|-----------------|----------|--------------|
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
-| type | Can be *platform*, *application* or *layer*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
+| type | Can be *platform*, *application* or *layer* | platform | **yes** |
 | dockerfilePrefix | Prefix path to dockerfile if not in the same folder as Raiden configuration file | docker/ | no |
 | options | Running options for container, explained just after |  | no |
 | environement | Override options depending on environement defined on --env option |  | no |
@@ -60,10 +71,7 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 
 ### Configuration file exemple ###
 
-
 ```
-#!yaml
-
 ## Default configuration
 name: apache
 type: platform
@@ -84,6 +92,15 @@ environements:
        expose:
             - "8080:80"
 ```
+
+### Run exemple ###
+
+- Run all platform :
+`raiden --pool /path/to/pool run`
+- Run only one application in dev environement :
+`raiden --pool /path/to/pool --env dev run apache`
+- Run multiple pools
+`raiden --pool /path/to/pool,/path/to/other/pool run`
 
 ## Environements ##
 
