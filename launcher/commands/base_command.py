@@ -65,7 +65,7 @@ class BaseCommand(object):
 		if stdout:
 			self.__printer.debug("Command output", stdout)
 		if stderr and proc.returncode == 0:
-			self.__printer.warning("Command output", stderr)
+			self.__printer.debug("Command output", stderr)
 		elif stderr and proc.returncode:
 			self.__printer.error("Command output", stderr)
 
