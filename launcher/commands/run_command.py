@@ -13,7 +13,7 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["expose", "mount", "link"]
+		self.filters = ["expose", "mount", "link", "extra"]
 
 		self.__printer = Printer()
 
@@ -47,6 +47,15 @@ class RunCommand(BaseCommand):
 			share_list += ["--link", "raiden-application-" + share + ":" + share]
 
 		return share_list
+
+	def filter_extra(self, param, container = None):
+		""" filter extra parameters """
+
+		extra_parameters = []
+		for extra in param[1]:
+			extra_parameters += extra.split(' ')
+
+		return extra_parameters
 
 	def execute(self, container):
 		"""

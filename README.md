@@ -68,6 +68,7 @@ For each one of these action, you can target specific containers. If don't targe
 | mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
 | link | list of container we should have access to. Using docker *--link* option | yass |
 | depend | List of image dependencies, those image will be run (or just build) first | laravel |
+| extra | Add custom parameters to run command | --dns 127.0.0.1 |
 
 ### Configuration file exemple ###
 

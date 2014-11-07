@@ -19,3 +19,4 @@
 ### raiden.yml configuration file
 
 - Adding dockerfilePrefix to set dockerfile location
+- Adding "extra" option to add custom parameters to command line
