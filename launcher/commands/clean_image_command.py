@@ -12,6 +12,14 @@ class CleanImageCommand(BaseCommand):
 
 		self.__printer = Printer()
 
+	def manage_output(self, returncode, stdout, stderr):
+		""" Manage command output """
+
+		if returncode == 1:
+			return 0
+
+		return super(CleanImageCommand, self).manage_output(returncode, stdout, stderr)
+
 	def execute(self, container):
 		""" Stop container if running and remove it """
 
