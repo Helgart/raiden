@@ -83,6 +83,11 @@ class Runner:
 			printer.error("Runner", e.message)
 			return False
 
+		## Some logic with toposort will be change in 0.3-beta
+		## But right now here a small fix to fix dependencies with clean commands
+		if action == 'clean' or action == 'clean-image' :
+			containers = reversed(containers)
+
 		## For now, just a simple error handling
 		## Will be improved in next version
 		has_errors = False

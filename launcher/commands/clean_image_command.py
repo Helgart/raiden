@@ -15,7 +15,7 @@ class CleanImageCommand(BaseCommand):
 	def execute(self, container):
 		""" Stop container if running and remove it """
 
-		## First, we stop the container
+		## First, we clean the container
 		clean_command = CleanCommand()
 		return_value = clean_command.execute(container)
 
