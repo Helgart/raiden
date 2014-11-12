@@ -37,7 +37,7 @@ class Runner:
 			## Case if a container has no dependencies
 			## We can directly push it to the sorted list
 			## Will be independant containers or layers
-			if not containers[index].options.has_key('link') and not containers[index].options.has_key('depend'):
+			if not containers[index].options.has_key('link') and not containers[index].options.has_key('depend') and not containers[index].options.has_key('persist'):
 				resolved = True
 
 			## So the container has dependencies,
@@ -47,6 +47,11 @@ class Runner:
 				if containers[index].options.has_key('depend'):
 					for dependency in containers[index].options['depend']:
 						if not self.__elementIsSorted(dependency, sorted_containers):
+							resolved = False
+							break
+				elif containers[index].options.has_key('persist'):
+					for persistent in containers[index].options['persist']:
+						if not self.__elementIsSorted(persistent, sorted_containers):
 							resolved = False
 							break
 				else:

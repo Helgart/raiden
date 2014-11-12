@@ -61,8 +61,10 @@ class RunCommand(BaseCommand):
 		""" manage --volumes-from """
 
 		volumes_from_parameters = []
+		for volume in param[1]:
+			volumes_from_parameters += ["--volumes-from", "raiden-data-" + volume]
 
-		return extra_parameters
+		return volumes_from_parameters
 
 	def execute(self, container):
 		"""
@@ -92,7 +94,7 @@ class RunCommand(BaseCommand):
 			return self.RETURN_SUCCESS
 
 		## If no autorun, we use create instead of run to create container without running it
-		## See docker 1.3 release notes
+		## See docker 1.3 release notes
 		if not container.autorun:
 			self.main_command = "docker create"
 
@@ -102,7 +104,7 @@ class RunCommand(BaseCommand):
 			self.main_command = "docker start"
 			self.params.append(container.internal_name)
 			return super(RunCommand, self).execute(container)
-		
+
 		## Default behavior, we run container from configuration file
 		self.__printer.info("Run", "Running container " + container.internal_name)
 		
