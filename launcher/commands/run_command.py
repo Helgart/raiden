@@ -13,7 +13,7 @@ class RunCommand(BaseCommand):
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values
-		self.filters = ["expose", "mount", "link", "extra"]
+		self.filters = ["expose", "mount", "link", "extra", "persist"]
 
 		self.__printer = Printer()
 
@@ -54,6 +54,13 @@ class RunCommand(BaseCommand):
 		extra_parameters = []
 		for extra in param[1]:
 			extra_parameters += extra.split(' ')
+
+		return extra_parameters
+
+	def filter_persist(self, param, container = None):
+		""" manage --volumes-from """
+
+		volumes_from_parameters = []
 
 		return extra_parameters
 
