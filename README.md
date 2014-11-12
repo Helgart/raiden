@@ -30,7 +30,7 @@ optional arguments:
 Raiden is made to help you manage a server using a docker base architecture.
 
 ## Dependencies ##
-For Raiden to work you need the following package to be installed with **docker** and **python 2.7** (not tested on anterior versions for now) :
+For Raiden to work you need the following package to be installed with **docker 1.3** and **python 2.7** (not tested on anterior versions for now) :
 
 * python-yaml
 

@@ -84,6 +84,11 @@ class RunCommand(BaseCommand):
 		if not container.runnable:
 			return self.RETURN_SUCCESS
 
+		## If no autorun, we use create instead of run to create container without running it
+		## See docker 1.3 release notes
+		if not container.autorun:
+			self.main_command = "docker create"
+
 		## Container is stopped, just need to resume it
 		if container.status == container.STATUS_STOPPED:
 			self.__printer.info("Run", "Resuming container " + container.internal_name)

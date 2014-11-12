@@ -9,4 +9,5 @@ class Data(BaseContainer):
 	def __init__(self, path, configuration = None):
 		super(Data, self).__init__(path, configuration)
 		self.runnable = False
-		self.deletable = False
+		self.removable = False
+		self.autorun = False

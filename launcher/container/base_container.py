@@ -6,7 +6,6 @@ import json
 from launcher.utilities.printer import Printer
 
 ## @todo: mainly missing some log
-## @todo: no additional parameters for now, to add
 ## @todo: no docker command should be run here, need to change that
 class BaseContainer(object):
 	""" Base container, herited by all container types """
@@ -27,7 +26,10 @@ class BaseContainer(object):
 		self.dockerfile = ''
 		self.environements = {}
 		self.currentEnv = None
+
 		self.runnable = True
+		self.autorun = True
+		self.removable = True
 		
 		self.__options = {}
 		self.__inspect = None
