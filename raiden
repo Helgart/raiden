@@ -19,6 +19,7 @@ parser.add_argument("--env", type=str, help="Define environement to launch")
 parser.add_argument("--log-path", type=str, help="Define where log should be written. No logging if not define")
 parser.add_argument("--log-level", type=str, help="Define log level")
 parser.add_argument("--log-name", default="raiden", type=str, help="Define logname. default raiden")
+parser.add_argument("--force", "-f", help="For non removable containers force to be deleted", action='store_true')
 arguments = parser.parse_args()
 
 finder = Finder()
@@ -47,7 +48,7 @@ if not pools :
 printer.debug("Raiden", "Pools : " + str(pools))
 containers = finder.search(pools)
 
-runner = Runner(arguments.env)
+runner = Runner(arguments.env, arguments.force)
 if not runner.run(containers, arguments.action):
 	printer.info("Raiden", "Done !")
 else:

@@ -6,8 +6,8 @@ from launcher.utilities.printer import Printer
 class CleanImageCommand(BaseCommand):
 	""" Stop container and remove it """
 
-	def __init__(self):
-		super(CleanImageCommand, self).__init__()
+	def __init__(self, force = False):
+		super(CleanImageCommand, self).__init__(force)
 		self.main_command = "docker rmi"
 
 		self.__printer = Printer()

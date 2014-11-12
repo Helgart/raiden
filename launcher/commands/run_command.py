@@ -8,8 +8,8 @@ from base_command import BaseCommand
 class RunCommand(BaseCommand):
 	""" Build a docker command from command type and configuration """
 
-	def __init__(self):
-		super(RunCommand, self).__init__()
+	def __init__(self, force = False):
+		super(RunCommand, self).__init__(force)
 		self.main_command = "docker run"
 
 		## RunCommand Filters for configuration file values

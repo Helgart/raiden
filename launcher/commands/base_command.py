@@ -9,12 +9,13 @@ class BaseCommand(object):
 	RETURN_SUCCESS = 0
 	RETURN_WONT_DO = -1
 
-	def __init__(self):
+	def __init__(self, force = False):
 
 		self.params = []
 		self.main_command = None
 		self.filters = []
 		self.trigger = []
+		self.force = False
 
 		self.__printer = Printer()
 

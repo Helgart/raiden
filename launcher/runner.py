@@ -5,8 +5,9 @@ from utilities.printer import Printer
 class Runner:
 	""" Run a collection of containers """
 
-	def __init__(self, env = None):
+	def __init__(self, env = None, force = False):
 		self.env = env
+		self.force = force
 
 	def __elementIsSorted(self, name, sortedList):
 		""" Check if container has already been sorted """
@@ -105,7 +106,7 @@ class Runner:
 
 				command_module = importlib.import_module(command_module_name)
 				command_class = getattr(command_module, command_class_name)
-				command = command_class()
+				command = command_class(self.force)
 
 				## Executing command
 				return_code = command.execute(container)

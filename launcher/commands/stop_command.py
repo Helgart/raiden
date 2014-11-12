@@ -5,8 +5,8 @@ from launcher.utilities.printer import Printer
 class StopCommand(BaseCommand):
 	""" Stop containers """
 
-	def __init__(self):
-		super(StopCommand, self).__init__()
+	def __init__(self, force = False):
+		super(StopCommand, self).__init__(force)
 		self.main_command = "docker stop"
 
 		self.__printer = Printer()
