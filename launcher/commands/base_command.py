@@ -9,12 +9,13 @@ class BaseCommand(object):
 	RETURN_SUCCESS = 0
 	RETURN_WONT_DO = -1
 
-	def __init__(self):
+	def __init__(self, force = False):
 
 		self.params = []
 		self.main_command = None
 		self.filters = []
 		self.trigger = []
+		self.force = force
 
 		self.__printer = Printer()
 
@@ -52,6 +53,16 @@ class BaseCommand(object):
 
 		return self
 
+	def manage_output(self, returncode, stdout, stderr):
+		""" Manage command output """
+
+		if stdout:
+			self.__printer.debug("Command output", stdout)
+		if stderr and returncode == 0:
+			self.__printer.debug("Command output", stderr)
+		elif stderr and returncode:
+			self.__printer.error("Command output", stderr)
+
 	def execute(self, container):
 		""" Execute command """
 
@@ -62,11 +73,4 @@ class BaseCommand(object):
 		proc = subprocess.Popen(self.main_command.split(' ') + self.params, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		stdout, stderr = proc.communicate()
 
-		if stdout:
-			self.__printer.debug("Command output", stdout)
-		if stderr and proc.returncode == 0:
-			self.__printer.warning("Command output", stderr)
-		elif stderr and proc.returncode:
-			self.__printer.error("Command output", stderr)
-
-		return proc.returncode
+		return self.manage_output(proc.returncode, stdout, stderr)

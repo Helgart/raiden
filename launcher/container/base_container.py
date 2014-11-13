@@ -1,11 +1,11 @@
 import os
+import os.path
 import subprocess
 import json
 
 from launcher.utilities.printer import Printer
 
 ## @todo: mainly missing some log
-## @todo: no additional parameters for now, to add
 ## @todo: no docker command should be run here, need to change that
 class BaseContainer(object):
 	""" Base container, herited by all container types """
@@ -22,31 +22,41 @@ class BaseContainer(object):
 
 		self.name = ''
 		self.path = path
+		self.type = 'base'
+		self.dockerfile = ''
 		self.environements = {}
 		self.currentEnv = None
+
 		self.runnable = True
+		self.autorun = True
+		self.removable = True
 		
 		self.__options = {}
 		self.__inspect = None
 		self.__status = None
 		self.__computedOptions = None
 
-		self.init(configuration)
-		self.internal_name = "raiden-" + self.name
-		self.internal_image_name = "raiden-" + self.name + "-image"
+		self.init(configuration, path)
+		self.internal_name = "raiden-" + self.type + "-" + self.name
+		self.internal_image_name = "raiden-" + self.type + "-" + self.name + "-image"
 
-		self.__printer.info("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
+		self.__printer.debug("Container", "Container " + self.internal_name + " from image " + self.internal_image_name + " loaded")
 
-	def init(self, configuration):
+	def init(self, configuration, path):
 		""" Init the container object using configuration object """
 
 		self.name = configuration['name']
+		self.type = configuration['type']
+
+		self.dockerfile = os.path.realpath(path + '/' + configuration['dockerfilePrefix']) if 'dockerfilePrefix' in configuration else path
 		
 		if 'options' in configuration:
 			self.__options = configuration['options']
 
 		self.__printer.debug("Container", "Container options")
 		self.__printer.debug("Container", "Name : " + self.name)
+		self.__printer.debug("Container", "Type : " + self.type)
+		self.__printer.debug("Container", "Dockerfile : " + self.dockerfile)
 		
 		if 'options' in configuration:
 			self.__printer.debug("Container", "Options : " + str(map(str, self.__options)))

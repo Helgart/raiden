@@ -5,14 +5,17 @@ from launcher.utilities.printer import Printer
 class StopCommand(BaseCommand):
 	""" Stop containers """
 
-	def __init__(self):
-		super(StopCommand, self).__init__()
+	def __init__(self, force = False):
+		super(StopCommand, self).__init__(force)
 		self.main_command = "docker stop"
 
 		self.__printer = Printer()
 
 	def execute(self, container):
 		""" Stop container if running """
+
+		if not container.runnable:
+			return
 
 		if not container.status == container.STATUS_RUNNING:
 			self.__printer.info("Stop", "Container " + container.internal_name + " is not running")

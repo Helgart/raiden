@@ -11,23 +11,23 @@ from launcher.runner import Runner
 ## Starting raiden launcher
 ## Defining application arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("action", help="Define launcher action, can be start, stop, restart, delete")
+parser.add_argument("action", help="Define launcher action, can be run, stop, restart, clean, clean-image or rebuild")
+parser.add_argument('images', nargs='*', help="List of targeted containers. if not defined, command will target all containers")
 parser.add_argument("-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
 parser.add_argument("--pools", help="Define the container pool folder path")
-parser.add_argument("--targets", type=str, help="List of targeted containers. if not defined, command will target all containers")
 parser.add_argument("--env", type=str, help="Define environement to launch")
 parser.add_argument("--log-path", type=str, help="Define where log should be written. No logging if not define")
 parser.add_argument("--log-level", type=str, help="Define log level")
 parser.add_argument("--log-name", default="raiden", type=str, help="Define logname. default raiden")
+parser.add_argument("--force", "-f", help="For non removable containers force to be deleted", action='store_true')
 arguments = parser.parse_args()
 
 finder = Finder()
-targets = arguments.targets.split(',') if arguments.targets else None
-pools = arguments.pools.split(',') if arguments.pools else None
+targets = list(set(arguments.images)) if arguments.images else None
+pools = list(set(arguments.pools.split(','))) if arguments.pools else None
 
-## adding a filter to finder
-if targets:
-	finder.addFilter('name', targets)
+## adding targets to filter for dependency resolving
+finder.targets = targets
 
 ## Setting global printer
 printer = Printer()
@@ -48,7 +48,7 @@ if not pools :
 printer.debug("Raiden", "Pools : " + str(pools))
 containers = finder.search(pools)
 
-runner = Runner(arguments.env)
+runner = Runner(arguments.env, arguments.force)
 if not runner.run(containers, arguments.action):
 	printer.info("Raiden", "Done !")
 else:

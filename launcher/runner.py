@@ -5,8 +5,9 @@ from utilities.printer import Printer
 class Runner:
 	""" Run a collection of containers """
 
-	def __init__(self, env = None):
+	def __init__(self, env = None, force = False):
 		self.env = env
+		self.force = force
 
 	def __elementIsSorted(self, name, sortedList):
 		""" Check if container has already been sorted """
@@ -36,7 +37,7 @@ class Runner:
 			## Case if a container has no dependencies
 			## We can directly push it to the sorted list
 			## Will be independant containers or layers
-			if not containers[index].options.has_key('link') and not containers[index].options.has_key('depend'):
+			if not containers[index].options.has_key('link') and not containers[index].options.has_key('depend') and not containers[index].options.has_key('persist'):
 				resolved = True
 
 			## So the container has dependencies,
@@ -46,6 +47,11 @@ class Runner:
 				if containers[index].options.has_key('depend'):
 					for dependency in containers[index].options['depend']:
 						if not self.__elementIsSorted(dependency, sorted_containers):
+							resolved = False
+							break
+				elif containers[index].options.has_key('persist'):
+					for persistent in containers[index].options['persist']:
+						if not self.__elementIsSorted(persistent, sorted_containers):
 							resolved = False
 							break
 				else:
@@ -83,6 +89,11 @@ class Runner:
 			printer.error("Runner", e.message)
 			return False
 
+		## Some logic with toposort will be change in 0.3-beta
+		## But right now here a small fix to fix dependencies with clean commands
+		if action == 'clean' or action == 'clean-image' :
+			containers = reversed(containers)
+
 		## For now, just a simple error handling
 		## Will be improved in next version
 		has_errors = False
@@ -93,9 +104,14 @@ class Runner:
 
 			## We try to execute requested action
 			try:
-				command_module = importlib.import_module("launcher.commands." + action + "_command")
-				command_class = getattr(command_module, action.title() + "Command")
-				command = command_class()
+				# Some sanity treatment
+				command_names = action.split('-')
+				command_module_name = "launcher.commands." + '_'.join(command_names) + "_command"
+				command_class_name = ''.join(map(lambda x: x.title(), command_names)) + 'Command'
+
+				command_module = importlib.import_module(command_module_name)
+				command_class = getattr(command_module, command_class_name)
+				command = command_class(self.force)
 
 				## Executing command
 				return_code = command.execute(container)

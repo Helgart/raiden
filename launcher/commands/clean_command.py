@@ -6,18 +6,41 @@ from launcher.utilities.printer import Printer
 class CleanCommand(BaseCommand):
 	""" Stop container and remove it """
 
-	def __init__(self):
-		super(CleanCommand, self).__init__()
+	def __init__(self, force = False):
+		super(CleanCommand, self).__init__(force)
 		self.main_command = "docker rm"
 
 		self.__printer = Printer()
 
+	def manage_output(self, returncode, stdout, stderr):
+		""" Manage command output """
+
+		if returncode == 1:
+			return 0
+
+		return super(CleanCommand, self).manage_output(returncode, stdout, stderr)
+
 	def execute(self, container):
 		""" Stop container if running and remove it """
 
+		## There's no container so no need to go further
+		if container.status == container.STATUS_BUILD or container.status == container.STATUS_UNKNOWN:
+			return
+
+		return_value = None
+
 		## First, we stop the container
-		stop_command = StopCommand()
-		return_value = stop_command.execute(container)
+		if container.status == container.STATUS_RUNNING:
+			stop_command = StopCommand()
+			return_value = stop_command.execute(container)
+
+		## We must check if this container is secured and must not be removed without force option
+		if not container.removable and not self.force:
+			self.__printer.debug("Run", "Container " + container.internal_name + " is protected and can't be deleted")
+			return
+
+		if not container.removable and self.force:
+			self.__printer.info("Run", "Force removing " + container.internal_name)
 
 		## Something happend while stopping container
 		## so we need to stop here

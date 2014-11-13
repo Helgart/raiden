@@ -7,8 +7,8 @@ from launcher.utilities.printer import Printer
 class RestartCommand(BaseCommand):
 	""" restart container """
 
-	def __init__(self):
-		super(RestartCommand, self).__init__()
+	def __init__(self, force = False):
+		super(RestartCommand, self).__init__(force)
 
 		self.__printer = Printer()
 
@@ -18,6 +18,9 @@ class RestartCommand(BaseCommand):
 				- StopCommand : to stop container
 				- RunCommand : to start container
 		"""
+
+		if not container.runnable:
+			return
 
 		self.__printer.info("Restart", "Restarting " + container.internal_name)
 

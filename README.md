@@ -1,25 +1,23 @@
-# Raiden infrastructure #
+# Raiden #
 
 ## Command usage ##
-```
-#!bash
 
-usage: raiden [-h] [-v V] [--pools POOLS] [--targets TARGETS] [--env ENV]
-              [--log-path LOG_PATH] [--log-level LOG_LEVEL]
-              [--log-name LOG_NAME]
-              action
+```
+usage: raiden [-h] [-v V] [--pools POOLS] [--env ENV] [--log-path LOG_PATH]
+              [--log-level LOG_LEVEL] [--log-name LOG_NAME]
+              action [images [images ...]]
 
 positional arguments:
-  action                Define launcher action, can be start, stop, restart,
-                        delete
+  action                Define launcher action, can be run, stop, restart,
+                        clean, clean-image
+  images                List of targeted containers. if not defined, command
+                        will target all containers
 
 optional arguments:
   -h, --help            show this help message and exit
   -v V                  Define log level from 0 (debug) to 3 (error only),
                         default 1 (info)
   --pools POOLS         Define the container pool folder path
-  --targets TARGETS     List of targeted containers. if not defined, command
-                        will target all containers
   --env ENV             Define environement to launch
   --log-path LOG_PATH   Define where log should be written. No logging if not
                         define
@@ -32,20 +30,33 @@ optional arguments:
 Raiden is made to help you manage a server using a docker base architecture.
 
 ## Dependencies ##
-For Raiden to work you need the following package to be installed with **docker** and **python 2.7** (not tested on anterior versions for now) :
+For Raiden to work you need the following package to be installed with **docker 1.3** and **python 2.7** (not tested on anterior versions for now) :
 
 * python-yaml
 
-## Configuration files ##
+## Configurations ##
 
 Each container folder must have a *raiden.yml* file wich define how container must run, and how it will interact with others. If no configuration file, container will ignored by raiden since he won't know what to do with it. For now oly 3 parameters are mandatory : *name* and *type*.
+
+### Actions  ###
+
+| Name | Description |
+|------|-------------|
+| run | Run containers and their dependencies. Build images if needed
+| stop | Stop containers |
+| restart | Stop containers and then start them again |
+| clean | Stop containers and delete them |
+| clean-image | Stop containers, delete them and their images |
+
+For each one of these action, you can target specific containers. If don't target any, all containers will be targeted by Raiden. See ... for exemples.
 
 ### Parameters details ###
 
 | Name | Description | Value exemple | Mantatory |
 |---------|-----------------|----------|--------------|
 | name  | Name of container, will be used by raiden to name images and containers   | apache | **yes** |
-| type | Can be *platform*, *application* or *layer*, application type container will be launching first to let platform type perfom some links with them | platform | **yes** |
+| type | Can be *platform*, *application* or *layer* | platform | **yes** |
+| dockerfilePrefix | Prefix path to dockerfile if not in the same folder as Raiden configuration file | docker/ | no |
 | options | Running options for container, explained just after |  | no |
 | environement | Override options depending on environement defined on --env option |  | no |
 
@@ -55,18 +66,18 @@ Each container folder must have a *raiden.yml* file wich define how container mu
 |---------|-----------------|----------|
 | expose | List of port to follow from host to container. Use the synthax *host_port:container_port* | 8080:80 |
 | mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
-| link | list of container we should have access to. Using docker *--link* option | yass |
-| depend | List of image dependencies, those image will be run (or just build) first | laravel |
+| link | list of container we should have access to. Using docker *--link* option. You must pass a raiden container name. | yass |
+| depend | List of image dependencies, those image will be run (or just build) first. You must pass a raiden container name. | laravel |
+| extra | Add custom parameters to run command | --dns 127.0.0.1 |
+| persist | mount a persistent container to persists data. You must pass a raiden container name. | yass-data |
 
 ### Configuration file exemple ###
 
-
 ```
-#!yaml
-
 ## Default configuration
 name: apache
 type: platform
+dockerfilePrefix: "dockerfile/"
 options:
     expose:
         - "80:80"
@@ -76,6 +87,8 @@ options:
         - other_container_name
     depend:
         - php
+    persist:
+        - apache-logs
 
 ## Environement overloading
 environements:
@@ -83,6 +96,15 @@ environements:
        expose:
             - "8080:80"
 ```
+
+### Run exemple ###
+
+- Run all platform :
+`raiden --pool /path/to/pool run`
+- Run only one application in dev environement :
+`raiden --pool /path/to/pool --env dev run apache`
+- Run multiple pools
+`raiden --pool /path/to/pool,/path/to/other/pool run`
 
 ## Environements ##
 
@@ -92,6 +114,13 @@ In raiden configuration file you can add environements using *environement* para
 ## Launching order ##
 
 Containers will be launch by their dependencies order. If you have linked containers, those container will be launch first.
+
+## Persistent data ##
+
+You can persist data creating a `data` image type. This will create a container that won't be run (not needed). You can then use it with the persist option in configuration file.
+
+For more informations, on how to create a persistent docker, and how to use it :
+https://docs.docker.com/userguide/dockervolumes/
 
 ## Want to know more ? ##
 
