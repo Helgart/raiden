@@ -66,9 +66,10 @@ For each one of these action, you can target specific containers. If don't targe
 |---------|-----------------|----------|
 | expose | List of port to follow from host to container. Use the synthax *host_port:container_port* | 8080:80 |
 | mount | List of folders to follow from host to container. Use the synthax *host_folder:container_folder* | /some/local/path:/some/container/path |
-| link | list of container we should have access to. Using docker *--link* option | yass |
-| depend | List of image dependencies, those image will be run (or just build) first | laravel |
+| link | list of container we should have access to. Using docker *--link* option. You must pass a raiden container name. | yass |
+| depend | List of image dependencies, those image will be run (or just build) first. You must pass a raiden container name. | laravel |
 | extra | Add custom parameters to run command | --dns 127.0.0.1 |
+| persist | mount a persistent container to persists data. You must pass a raiden container name. | yass-data |
 
 ### Configuration file exemple ###
 
@@ -86,6 +87,8 @@ options:
         - other_container_name
     depend:
         - php
+    persist:
+        - apache-logs
 
 ## Environement overloading
 environements:
@@ -111,6 +114,13 @@ In raiden configuration file you can add environements using *environement* para
 ## Launching order ##
 
 Containers will be launch by their dependencies order. If you have linked containers, those container will be launch first.
+
+## Persistent data ##
+
+You can persist data creating a `data` image type. This will create a container that won't be run (not needed). You can then use it with the persist option in configuration file.
+
+For more informations, on how to create a persistent docker, and how to use it :
+https://docs.docker.com/userguide/dockervolumes/
 
 ## Want to know more ? ##
 
