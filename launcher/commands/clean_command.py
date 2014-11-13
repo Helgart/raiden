@@ -23,16 +23,18 @@ class CleanCommand(BaseCommand):
 	def execute(self, container):
 		""" Stop container if running and remove it """
 
-		if not container.runnable:
-			return
-
-		## First, we stop the container
-		stop_command = StopCommand()
-		return_value = stop_command.execute(container)
+		## First, we stop the container if container is runnable
+		if container.runnable:
+			stop_command = StopCommand()
+			return_value = stop_command.execute(container)
 
 		## We must check if this container is secured and must not be removed without force option
 		if not container.removable and not self.force:
+			self.__printer.debug("Run", "Container " + container.internal_name + " is protected and can't be deleted")
 			return
+
+		if not container.removable and self.force:
+			self.__printer.info("Run", "Force removing " + container.internal_name)
 
 		## Something happend while stopping container
 		## so we need to stop here

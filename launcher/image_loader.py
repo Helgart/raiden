@@ -7,6 +7,7 @@ from container.base_container import BaseContainer
 from container.application import Application
 from container.platform import Platform
 from container.layer import Layer
+from container.data import Data
 
 class ImageLoader:
 	""" Instanciate a container class from a configuration file """
@@ -42,6 +43,9 @@ class ImageLoader:
 		elif configuration['type'] == "layer":
 			printer.debug("Loader", "Container type: Layer")
 			image = Layer(path, configuration)
+		elif configuration['type'] == "data":
+			printer.debug("Loader", "Container type: Data")
+			image = Data(path, configuration)
 		else:
 			printer.debug("Loader", "Unknown container type")
 			image = BaseContainer(path, configuration)

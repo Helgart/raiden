@@ -15,7 +15,7 @@ class BaseCommand(object):
 		self.main_command = None
 		self.filters = []
 		self.trigger = []
-		self.force = False
+		self.force = force
 
 		self.__printer = Printer()
 

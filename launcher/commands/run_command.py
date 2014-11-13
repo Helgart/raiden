@@ -73,6 +73,7 @@ class RunCommand(BaseCommand):
 				- Container is stopped. Just resume it.
 				- Container doesn't exists, but his image do. Run it for the first time using configuration file and docker run.
 				- Container doesn't exists, not his image. We need to build it and then run it for the first rime.
+				- Container have autorun parameter to false. We can create the container but we should not run it. Using docker create.
 			Since we don't have any triggers yet in Raiden, we do the logic here. Won't stay here for too long.
 		"""
 
@@ -96,7 +97,12 @@ class RunCommand(BaseCommand):
 		## If no autorun, we use create instead of run to create container without running it
 		## See docker 1.3 release notes
 		if not container.autorun:
+			self.__printer.debug("Run", "Autorun disable for container " + container.internal_name)
 			self.main_command = "docker create"
+
+		## detached option is valid only if we run the container
+		else:
+			self.params = ["-d"]
 
 		## Container is stopped, just need to resume it
 		if container.status == container.STATUS_STOPPED:
@@ -110,6 +116,6 @@ class RunCommand(BaseCommand):
 		
 		## Adding params
 		self.addParams(container.options, container)
-		self.params += ["-d", "--name", container.internal_name, container.internal_image_name]
+		self.params += ["--name", container.internal_name, container.internal_image_name]
 
 		return super(RunCommand, self).execute(container)
