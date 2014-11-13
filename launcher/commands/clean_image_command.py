@@ -24,7 +24,7 @@ class CleanImageCommand(BaseCommand):
 		""" Stop container if running and remove it """
 
 		## First, we clean the container
-		clean_command = CleanCommand()
+		clean_command = CleanCommand(self.force)
 		return_value = clean_command.execute(container)
 
 		self.params.append(container.internal_image_name)		

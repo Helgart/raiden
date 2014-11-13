@@ -23,8 +23,14 @@ class CleanCommand(BaseCommand):
 	def execute(self, container):
 		""" Stop container if running and remove it """
 
-		## First, we stop the container if container is runnable
-		if container.runnable:
+		## There's no container so no need to go further
+		if container.status == container.STATUS_BUILD or container.status == container.STATUS_UNKNOWN:
+			return
+
+		return_value = None
+
+		## First, we stop the container
+		if container.status == container.STATUS_RUNNING:
 			stop_command = StopCommand()
 			return_value = stop_command.execute(container)
 

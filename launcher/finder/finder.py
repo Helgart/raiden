@@ -50,6 +50,8 @@ class Finder:
 				dependencies = containers[target].options['depend']
 			if containers[target].options.has_key('link'):
 				dependencies += containers[target].options['link']
+			if containers[target].options.has_key('persist'):
+				dependencies += containers[target].options['persist']
 
 			for dependency in dependencies:
 				containersBuffer = dict(containersBuffer.items() + self.findDependencies(dependency, containers, containersBuffer).items())
