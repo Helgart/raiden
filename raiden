@@ -24,7 +24,7 @@ arguments = parser.parse_args()
 
 finder = Finder()
 targets = list(set(arguments.images)) if arguments.images else None
-pools = list(set(arguments.pools.split(','))) if arguments.pools else None
+pools = list(set(arguments.pools.split(','))) if arguments.pools else '.'
 
 ## adding targets to filter for dependency resolving
 finder.targets = targets
