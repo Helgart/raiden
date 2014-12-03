@@ -52,7 +52,7 @@ finder.targets = targets
 
 ## Do printer need to log ?
 if arguments.log_path:
-	printer.setLogger(configuration.log_file, arguments.log_level)
+	printer.setLogger(configuration.log_file, configuration.log_level)
 
 ## Checking platform path
 printer.debug("Raiden", "Pools : " + str(configuration.pools))
