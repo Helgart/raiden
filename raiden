@@ -7,7 +7,7 @@ import string
 from launcher.utilities.printer import Printer
 from launcher.finder.finder import Finder
 from launcher.runner import Runner
-from launcher import Configuration
+from launcher.configuration import Configuration
 
 ## Starting raiden launcher
 ## Defining application arguments
@@ -15,8 +15,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("action", help="Define launcher action, can be run, stop, restart, clean, clean-image or rebuild")
 parser.add_argument('images', nargs='*', help="List of targeted containers. if not defined, command will target all containers")
 parser.add_argument("--verbose", "-v", type=int, help="Define log level from 0 (debug) to 3 (error only), default 1 (info)")
-parser.add_argument("--pools", "-p", defautl=".", help="Define the container pool folder path")
-parser.add_argument("--env", "-e", type=str, help="Define environement to launch")
+parser.add_argument("--pools", "-p", nargs='*', default=".", help="Define the container pool folder path")
+parser.add_argument("--environement", "-e", type=str, help="Define environement to launch")
 parser.add_argument("--log-path", type=str, help="Define where log should be written. No logging if not define")
 parser.add_argument("--log-level", type=str, help="Define log level")
 parser.add_argument("--log-name", default="raiden", type=str, help="Define logname. default raiden")
@@ -26,40 +26,39 @@ arguments = parser.parse_args()
 
 ## Setting global printer
 printer = Printer()
-if arguments.v != None:
-	printer.level = arguments.v
+if arguments.verbose != None:
+	printer.level = arguments.verbose
 
-configuration = Configuration(arguments)
+## Getting targeted services
+targets = list(set(arguments.images)) if arguments.images else None
+
+configuration = Configuration()
 
 ## Checking if there's a configuration file
 ## default configuration file path is /etc/raiden/conf.yml
-if os.path.isfile(configuration_file):
+if os.path.isfile(arguments.configuration):
 	printer.debug("Raiden", "Loading configuration file " + arguments.configuration)
-	configuration.load(arguments.configuration)
+	configuration.loadFile(arguments.configuration)
 else:
 	printer.debug("Raiden", "No configuration file '" + arguments.configuration + "' to load")
 
+## Command line arguments override configuration file
+configuration.load(arguments.__dict__)
+
 finder = Finder()
-targets = list(set(arguments.images)) if arguments.images else None
-pools = list(set(arguments.pools.split(','))) if arguments.pools else '.'
 
 ## adding targets to filter for dependency resolving
 finder.targets = targets
 
 ## Do printer need to log ?
 if arguments.log_path:
-	printer.setLogger(arguments.log_path + "/" + arguments.log_name + ".log", arguments.log_level)
-
-## well ... if we have no path to check ... we can't do anything
-if not pools :
-	printer.error("Raiden", "No path to check")
-	exit(0)
+	printer.setLogger(configuration.log_file, arguments.log_level)
 
 ## Checking platform path
-printer.debug("Raiden", "Pools : " + str(pools))
-containers = finder.search(pools)
+printer.debug("Raiden", "Pools : " + str(configuration.pools))
+containers = finder.search(configuration.pools)
 
-runner = Runner(arguments.env, arguments.force)
+runner = Runner(configuration.environement, arguments.force)
 if not runner.run(containers, arguments.action):
 	printer.info("Raiden", "Done !")
 else:
